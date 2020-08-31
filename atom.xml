@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-07-18T21:58:10.000Z</updated>
+  <updated>2020-08-31T03:32:31.821Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,19 +17,20 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
+    <title>Welcome to my Page</title>
     <link href="http://yoursite.com/2020/08/31/hello-world/"/>
     <id>http://yoursite.com/2020/08/31/hello-world/</id>
     <published>2020-08-31T00:12:47.076Z</published>
-    <updated>2020-07-18T21:58:10.000Z</updated>
+    <updated>2020-08-31T03:32:31.821Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="Personal-Information"><a href="#Personal-Information" class="headerlink" title="Personal Information"></a>Personal Information</h2><p>Name: Zhiwei Xu</p><p>Name in Chinese: 许志炜</p><p>Gender: Female</p><p>Location: Hangzhou, China</p><p>Email: <a href="mailto:bramberxu@gmail.com">bramberxu@gmail.com</a>](<a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">https://hexo.io/docs/one-command-deployment.html</a>)</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="Who-am-I"><a href="#Who-am-I" class="headerlink" title="Who am I"></a>Who am I</h2><p>Name: Zhiwei Xu</p><p>Name in Chinese: 许志炜</p><p>Gender: Female</p><p>Profession: A student of Control Science and Engineering College, Zhejiang University</p><p>Location: Hangzhou, China</p><p>Email: <a href="mailto:bramberxu@gmail.com">bramberxu@gmail.com</a>]</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h2 id=&quot;Personal-Information&quot;&gt;&lt;a href=&quot;#Personal-Information&quot; class=&quot;headerlink&quot; title=&quot;Personal Information&quot;&gt;&lt;/a&gt;Personal Information&lt;/h2&gt;&lt;
+        &lt;h2 id=&quot;Who-am-I&quot;&gt;&lt;a href=&quot;#Who-am-I&quot; class=&quot;headerlink&quot; title=&quot;Who am I&quot;&gt;&lt;/a&gt;Who am I&lt;/h2&gt;&lt;p&gt;Name: Zhiwei Xu&lt;/p&gt;
+&lt;p&gt;Name in Chinese: 许志炜&lt;/p
       
     
     </summary>
