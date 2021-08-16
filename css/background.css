@@ -1,0 +1,289 @@
+/*自定义字体*/
+
+@font-face{
+  font-family:'shoujin' ;  /* 字体名自定义即可 */
+  src:url('/fonts/shoujin.ttf'); /* 字体文件路径 */
+  font-display : swap;
+}
+
+/*-------------颜色合集-------------*/
+
+/* 博主昵称颜色 */
+.author-info__name {
+  color: #02548a;
+}
+
+/* 打字效果渐变 */
+
+@-webkit-keyframes Gradient {
+  0% {
+      background-position: 0 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0 50%;
+  }
+}
+
+@-moz-keyframes Gradient {
+  0% {
+      background-position: 0 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0 50%;
+  }
+}
+
+@keyframes Gradient {
+  0% {
+      background-position: 0 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0 50%;
+  }
+}
+
+#subtitle {
+  background: linear-gradient(-45deg, #f9fbfd, #a5d2ec, #b6d5e4, #23d5ab);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 10s ease infinite;
+  -moz-animation: Gradient 10s ease infinite;
+  animation: Gradient 10s ease infinite;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-family: 'shoujin', sans-serif;
+  font-size: 32px;
+}
+
+#subtitle:before {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+/*title的颜色渐变*/
+
+#site-title {
+  background: linear-gradient(-45deg, #f9fbfd, #a5d2ec, #b6d5e4, #23d5ab);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 10s ease infinite;
+  -moz-animation: Gradient 10s ease infinite;
+  animation: Gradient 10s ease infinite;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-family: 'shoujin', sans-serif;
+}
+
+
+/* 顶部导航栏 */
+#nav a {
+  background: linear-gradient(-45deg, #f9fbfd, #a5d2ec, #b6d5e4, #23d5ab);
+  background-size: 400% 400%;
+  -webkit-animation: Gradient 10s ease infinite;
+  -moz-animation: Gradient 10s ease infinite;
+  animation: Gradient 10s ease infinite;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* a标签默认颜色 */
+
+#article-container a {
+  color: #32b3e6;
+  text-decoration: none;
+}
+
+/* 鼠标悬停时的颜色 */
+
+#article-container a:hover {
+  color: #8d87cc;
+  text-decoration: none;
+}
+/*a标签颜色*/
+a {
+  color: #32b3e6;
+}
+
+/* 目录隐藏按钮颜色 */
+
+#toggle-sidebar {
+  color: #8d87cc !important;
+}
+
+/*页脚自定义字段字体颜色*/
+/* 也就是配置文件里的footer_custom_text */
+
+.footer_custom_text {
+  color: #afd7f8;
+}
+
+/* 首页文章卡片 */
+#recent-posts > .recent-post-item{
+  background:rgba(255, 255, 255, 0.9);
+}
+/* 首页侧栏卡片 */
+.card-widget{
+background:rgba(255, 255, 255, 0.9)!important;
+}
+/* 文章页面正文背景 */
+div#post{
+background: rgba(255, 255, 255, 0.9);
+}
+/* 分页页面 */
+div#page{
+background: rgba(255, 255, 255, 0.9);
+}
+/* 归档页面 */
+div#archive{
+background: rgba(255, 255, 255, 0.9);
+}
+/* 标签页面 */
+div#tag{
+background: rgba(255, 255, 255, 0.9);
+}
+/* 分类页面 */
+div#category{
+background: rgba(255, 255, 255, 0.9);
+}
+
+/* 页脚透明 */
+#footer{
+  background: transparent!important;
+}
+
+/*top-img黑色透明玻璃效果移除，不建议加，除非你执着于完全一图流或者背景图对比色明显
+#page-header.post-bg:before {
+  background-color: transparent!important;
+}
+*/
+
+/*夜间模式伪类遮罩层透明*/
+[data-theme="dark"]
+  #footer::before{
+      background: transparent!important;
+    }
+[data-theme="dark"]
+  #page-header::before{
+    background: transparent!important;
+    }
+
+/* 滚动条 */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8ccdf5;
+  background-image: -webkit-linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
+  border-radius: 2em;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-moz-selection {
+  color: #fff;
+  background-color: #32b3e6;
+}
+
+/*-------------图标合集-------------*/
+
+/* 全局默认鼠标指针 */
+body,
+html{
+  cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/arrow.cur'),auto !important;
+}
+/* 悬停图片时的鼠标指针 */
+img{
+  cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/btn.cur'),auto !important;
+}
+/* 选择链接标签时的鼠标指针 */
+a:hover{
+    cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/link.cur'),auto;
+}
+/* 选中输入框时的鼠标指针 */
+input:hover{
+    cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/input.cur'),auto;
+}
+/* 悬停按钮时的鼠标指针 */
+button:hover{
+    cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/btn.cur'),auto;
+}
+/* 悬停列表标签时的鼠标指针 */
+i:hover{
+    cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/link.cur'),auto;
+}
+/* 悬停页脚链接标签（例如页脚徽标）时的鼠标指针 */
+#footer-wrap a:hover{
+      cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/hf.cur'),auto;
+}
+/* 悬停页码时的鼠标指针 */
+#pagination .page-number:hover{
+      cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/i.cur'),auto;
+}
+/* 悬停菜单栏时的鼠标指针 */
+#nav .site-page:hover{
+      cursor: url('https://cdn.jsdelivr.net/npm/akilar-candyassets/cur/hf.cur'),auto;
+}
+
+/*up酱*/
+
+#upj:hover {
+  cursor: url(/img/mouse.png), auto;
+}
+
+/* 隐藏回到顶部按钮，替换为up酱 */
+
+#go-up i {
+  display: none;
+  background-color: transparent !important;
+}
+
+#go-up {
+  background-color: transparent !important;
+}
+
+#upj {
+  transform: translate(-70px, -80px) !important;
+}
+
+
+/*移动端优化：去除归档、标签、最新文章、公告、、只保留网站统计*/
+
+@media screen and (max-width: 800px) {
+  #aside_content div:not(:last-child) {
+      display: none;
+      font-size: 13px;
+  }
+}
+
