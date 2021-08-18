@@ -153,15 +153,17 @@ a {
   background: rgba(255, 255, 255, 0.5)
 }
 
+#page-header {
+  background-color: transparent!important;
+}
+
 #web_bg {
   background: url('/img/background.png');
   background-size:cover;
   background-position: center;
 }
 
-#index img {
-  filter: brightness(50%);
-}
+
 
 /*页脚自定义字段字体颜色*/
 /* 也就是配置文件里的footer_custom_text */
@@ -229,7 +231,7 @@ a {
     }
 [data-theme="dark"]
   #page-header::before{
-    background:  rgba(0, 0, 0, 0.58)!important;
+    background:  rgba(0, 0, 0, 0)!important;
     }
 
 /*-------------图标合集-------------*/
@@ -257,11 +259,11 @@ button:hover{
 }
 /* 悬停列表标签时的鼠标指针 */
 i:hover{
-    cursor: url('/img/mouse/Handwriting.cur'),auto;
+    cursor: url('/img/mouse/Hand.cur'),auto;
 }
 /* 悬停页脚链接标签（例如页脚徽标）时的鼠标指针 */
 #footer-wrap a:hover{
-      cursor: url('/img/mouse/Handwriting.cur'),auto;
+      cursor: url('/img/mouse/Hand.cur'),auto;
 }
 /* 悬停页码时的鼠标指针 */
 #pagination .page-number:hover{

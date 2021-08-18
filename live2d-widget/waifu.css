@@ -1,9 +1,9 @@
 #waifu-toggle {
-	background-color: #fa0;
+	background-color: rgb(0, 195, 255);
 	border-radius: 5px;
 	bottom: 66px;
 	color: #fff;
-	cursor: pointer;
+	cursor: url('/img/mouse/Hand.cur'),auto;
 	font-size: 12px;
 	left: 0;
 	margin-left: -100px;
@@ -26,7 +26,7 @@
 
 #waifu {
 	bottom: -1000px;
-	left: 1400px;
+	right: 150px;
 	line-height: 0;
 	margin-bottom: -10px;
 	position: fixed;
@@ -41,11 +41,12 @@
 
 #waifu-tips {
 	animation: shake 50s ease-in-out 5s infinite;
-	background-color: rgba(236, 217, 188, .5);
-	border: 1px solid rgba(224, 186, 140, .62);
+	background-color: rgba(220, 244, 248, 0.8);
+	border: 1px solid rgba(119, 173, 223, 0.62);
 	border-radius: 12px;
-	box-shadow: 0 3px 15px 2px rgba(191, 158, 118, .2);
-	font-size: 14px;
+	box-shadow: 0 3px 15px 2px rgba(118, 170, 191, 0.2);
+	font-size: 18px;
+	font-family: 'shoujin', sans-serif;
 	line-height: 24px;
 	margin: -30px 20px;
 	min-height: 70px;
@@ -69,14 +70,14 @@
 }
 
 #live2d {
-	cursor: grab;
-	height: 300px;
+	cursor: url('/img/mouse/Hand.cur'),auto;
+	height: 260px;
 	position: relative;
-	width: 300px;
+	width: 260px;
 }
 
 #live2d:active {
-	cursor: grabbing;
+	cursor: url('/img/mouse/NO.cur'),auto;
 }
 
 #waifu-tool {
@@ -94,7 +95,7 @@
 
 #waifu-tool span {
 	color: #7b8c9d;
-	cursor: pointer;
+	cursor: url('/img/mouse/Hand.cur'),auto;
 	display: block;
 	line-height: 30px;
 	text-align: center;
