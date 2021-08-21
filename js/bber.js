@@ -35,8 +35,11 @@ if (document.querySelector('#bber-loading')) {
               from_icon = '<i class="fas fa-tablet-alt"></i>';
             }else if (item.from.indexOf("Mac") != -1){
               from_icon = '<i class="fas fa-laptop"></i>';
+            }else if (item.from.indexOf("Linux") != -1){
+              from_icon = '<i class="fab fa-linux"></i>';
             }else if (item.from.indexOf("微信") != -1){
-              from_icon = '<i class="fab fa-weixin" style="font-size: 0.6rem"></i>';
+              from_icon = '<i class="fas fa-mobile-alt"></i>';
+              item.from = "iPhone";
             }else{
               from_icon = '<i class="fas fa-tools"></i>';
             };
