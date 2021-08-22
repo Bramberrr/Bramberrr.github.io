@@ -1,7 +1,7 @@
-//if (document.querySelector('#bber-loading')) {
-//    var loading_pic = document.getElementById('bber-loading');
-//    loading_pic.innerHTML = '<span id="moments_loading"><i class="fa fa-spinner fa-spin"></i></span>';
-//  }
+  if (document.querySelector('#bber-loading')) {
+    var loading_pic = document.getElementById('bber-loading');
+    loading_pic.innerHTML = '<span id="moments_loading"><i class="fa fa-spinner fa-spin"></i></span>';
+  }
   
   if (document.querySelector('#bber')) {
     app.auth({
