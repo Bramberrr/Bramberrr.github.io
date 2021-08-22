@@ -11,7 +11,7 @@
       $(bbClass).after('<div class="load"><button class="load-btn button-load">Loading……</button></div>')
       const db = app.database()
       const collection = db.collection('talks')
-      var count=0, per = 9,page = 1
+      var count=0, per = 2,page = 1
       collection.count(function(err,res){
         count = res.total
         loading_pic.innerHTML = ``;
