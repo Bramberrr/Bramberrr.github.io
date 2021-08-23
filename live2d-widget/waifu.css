@@ -22,11 +22,11 @@
 	margin-left: -30px;
 }
 
-/*相对左下角的位置*/
+/*相对右下角的位置*/
 
 #waifu {
 	bottom: -1000px;
-	right: 150px;
+	right: 120px;
 	line-height: 0;
 	margin-bottom: -10px;
 	position: fixed;
