@@ -139,31 +139,31 @@ a {
 }
 
 #recent-posts>.recent-post-item,.layout_page>div:first-child:not(.recent-posts),.layout_post>#page,.layout_post>#post,.read-mode .layout_post>#post {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #aside-content .card-widget {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #archive {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #page {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #post {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #tag {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #category {
-  background: rgba(255, 255, 255, 0.7)
+  background: rgba(255, 255, 255, 0.8)
 }
 
 #page-header {
@@ -176,7 +176,9 @@ a {
   background-position: center;
 }
 
-
+#post-comment .vpanel{
+  background: rgba(255, 255, 255, 0.6);
+}
 
 /*页脚自定义字段字体颜色*/
 /* 也就是配置文件里的footer_custom_text */
@@ -258,6 +260,10 @@ a {
   #page-header::before{
     background:  rgba(0, 0, 0, 0)!important;
     }
+[data-theme="dark"]
+  #post-comment .vpanel{
+    background: rgba(0, 0, 0, 0.6);
+  }  
 
 /*-------------图标合集-------------*/
 
@@ -374,6 +380,14 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
   margin-top: 0.0rem;
 }
 
+/*分割线风车旋转*/
+
+hr::before {
+  -webkit-animation: ccc 3s linear infinite ;
+  animation: ccc 3s linear infinite ;
+  color: #868686;
+}
+
 /*图片下的说明文字居中*/
 
 .jg-caption{
@@ -406,4 +420,16 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
       display: none;
       font-size: 13px;
   }
+}
+
+/*评论页面的字号*/
+
+#post-comment {
+  font-size: 22px;
+}
+
+/*链接页面的格式*/
+
+.flink {
+  columns: 3;
 }

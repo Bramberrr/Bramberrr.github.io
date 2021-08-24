@@ -1300,8 +1300,8 @@ canvas:not(#ribbon-canvas),
   --global-font-size: 14px;
   --global-bg: #fff;
   --font-color: #4c4948;
-  --hr-border: #d2ebfd;
-  --hr-before-color: #bfe4fb;
+  --hr-border: #808080;
+  --hr-before-color: #4d4d4d;
   --search-bg: #f6f8fa;
   --search-input-color: #4c4948;
   --search-result-title: #4c4948;
@@ -1407,7 +1407,7 @@ hr:before {
   left: 5%;
   z-index: 1;
   color: var(--hr-before-color);
-  content: '\f0c4';
+  content: '\f863';
   font-size: 20px;
   line-height: 1;
   -webkit-transition: all 1s ease-in-out;
@@ -2190,7 +2190,7 @@ blockquote footer cite:before {
 }
 .site-card {
   margin: 8px;
-  width: calc(100% / 4 - 16px);
+  width: calc(90% - 16px);
   display: block;
   line-height: 1.4;
   height: 100%;
