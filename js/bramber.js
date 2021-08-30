@@ -9,6 +9,7 @@ for (var i = 0; i < menus_item_child.length; i++) {
     menus_expand[i].className += " closed";
 }
 
+
 //动态标题
 var OriginTitile = document.title;
 var titleTime;
