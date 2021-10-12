@@ -6,6 +6,10 @@
   font-display : swap;
 }
 
+#post {
+  font-size: large;
+}
+
 /*-------------颜色合集-------------*/
 
 /* 博主昵称颜色 */
@@ -154,7 +158,7 @@ a {
 }
 
 #post {
-  background: rgba(255, 255, 255, 0.8)
+  background: rgba(255, 255, 255, 1)
 }
 
 #tag {
