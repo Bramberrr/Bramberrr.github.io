@@ -1,0 +1,376 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Adaptive control | Bramber</title><meta name="keywords" content="applied nonlinear control,control theory"><meta name="author" content="Zhiwei Xu"><meta name="copyright" content="Zhiwei Xu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Adaptive control1 Basic Concepts in Adaptive ControlSuit for:  Robot manipulating different distributions Ship steering with uncertain parameters Aircraft control on altitude, speed and configuration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adaptive control">
+<meta property="og:url" content="http://example.com/2021/10/26/NOTE/adaptive/index.html">
+<meta property="og:site_name" content="Bramber">
+<meta property="og:description" content="Adaptive control1 Basic Concepts in Adaptive ControlSuit for:  Robot manipulating different distributions Ship steering with uncertain parameters Aircraft control on altitude, speed and configuration">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/transparent">
+<meta property="article:published_time" content="2021-10-26T10:25:44.000Z">
+<meta property="article:modified_time" content="2021-11-03T08:26:29.466Z">
+<meta property="article:author" content="Zhiwei Xu">
+<meta property="article:tag" content="applied nonlinear control">
+<meta property="article:tag" content="control theory">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/transparent"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2021/10/26/NOTE/adaptive/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Adaptive control',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-03 16:26:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zhheo/JS-Heo@main/bb/showbb_in_index.css"><link rel="stylesheet" href="/css/bber.css" type="text/css" ><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="iron-container iron-circle"><div class="iron-box1 iron-circle iron-center"></div><div class="iron-box2 iron-circle iron-center"></div><div class="iron-box3 iron-circle iron-center"></div><div class="iron-box4 iron-circle iron-center"></div><div class="iron-box5 iron-circle iron-center"></div><div class="iron-box6 iron-circle"><div class="iron-coil" style="--i: 0"></div><div class="iron-coil" style="--i: 1"></div><div class="iron-coil" style="--i: 2"></div><div class="iron-coil" style="--i: 3"></div><div class="iron-coil" style="--i: 4"></div><div class="iron-coil" style="--i: 5"></div><div class="iron-coil" style="--i: 6"></div><div class="iron-coil" style="--i: 7"></div></div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> Talks</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/artitalk/"><i class="fa-fw fas fa-icons"></i><span> Artitalk</span></a></li><li><a class="site-page child" href="/bb/"><i class="fa-fw fas fa-paper-plane"></i><span> Tree Hole</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-comment-dots"></i><span> Comments</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: transparent"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Bramber</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> Talks</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/artitalk/"><i class="fa-fw fas fa-icons"></i><span> Artitalk</span></a></li><li><a class="site-page child" href="/bb/"><i class="fa-fw fas fa-paper-plane"></i><span> Tree Hole</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-comment-dots"></i><span> Comments</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Adaptive control</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-10-26T10:25:44.000Z" title="Created 2021-10-26 18:25:44">2021-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-11-03T08:26:29.466Z" title="Updated 2021-11-03 16:26:29">2021-11-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/NOTE/">NOTE</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Adaptive control"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Adaptive-control"><a href="#Adaptive-control" class="headerlink" title="Adaptive control"></a><p align="center">Adaptive control</p></h1><h3 id="1-Basic-Concepts-in-Adaptive-Control"><a href="#1-Basic-Concepts-in-Adaptive-Control" class="headerlink" title="1 Basic Concepts in Adaptive Control"></a>1 Basic Concepts in Adaptive Control</h3><p>Suit for:</p>
+<ul>
+<li>Robot manipulating different distributions</li>
+<li>Ship steering with uncertain parameters</li>
+<li>Aircraft control on altitude, speed and configuration</li>
+<li>Process control in metallurgical and chemical processes (most important)</li>
+</ul>
+<p>Adaptive control is superior in dealing with uncertainties in constant or slowly-varying parameters - it will $\uparrow$ performance as adaption go on, and requires little priori estimation on parameters</p>
+<p>Robust could realize <em>linear parameterization</em></p>
+<h4 id="Two-ways-to-design-adaptive-controller"><a href="#Two-ways-to-design-adaptive-controller" class="headerlink" title="Two ways to design adaptive controller"></a>Two ways to design adaptive controller</h4><ul>
+<li><h5 id="MODEL-REFERENCE-ADAPTIVE-CONTROL-MRAC"><a href="#MODEL-REFERENCE-ADAPTIVE-CONTROL-MRAC" class="headerlink" title="MODEL-REFERENCE ADAPTIVE CONTROL (MRAC)"></a>MODEL-REFERENCE ADAPTIVE CONTROL (MRAC)</h5></li>
+</ul>
+<p>♦ a plant containing unknown parameters</p>
+<p>♦ a reference model</p>
+<p>♦ feedback control law containing adjustable parameters</p>
+<p>♦ adaptation mechanism for updating parameters</p>
+<p><img src="/2021/10/26/NOTE/adaptive/MRAC.png" alt="MRAC"></p>
+<p>*: The controller must have perfect tracking capacity</p>
+<ul>
+<li><h5 id="SELF-TUNING-CONTROLLERS-STC"><a href="#SELF-TUNING-CONTROLLERS-STC" class="headerlink" title="SELF-TUNING CONTROLLERS (STC)"></a>SELF-TUNING CONTROLLERS (STC)</h5></li>
+</ul>
+<p>♦ $u, y\to\hat a$</p>
+<p>♦ $r,\hat a \to u \to y$</p>
+<p><img src="/2021/10/26/NOTE/adaptive/MRAC.png" alt="STC"></p>
+<p>Estimators: pole-placement, PID, LQR (linear quadratic control), minimum variance control, or $H^\infty$designs.</p>
+<p>Estimating system parameter: indirect adaptive control</p>
+<p>Estimating controller parameter: direct adaptive control</p>
+<h5 id="Comparing"><a href="#Comparing" class="headerlink" title="Comparing:"></a>Comparing:</h5><p>MRAC: min tracking error; more stability and convergence; suit for continuous</p>
+<p>STC: min data-fitting error in input-output measurements; more flexible; suit for discrete</p>
+<h4 id="Design-steps"><a href="#Design-steps" class="headerlink" title="Design steps"></a>Design steps</h4><ul>
+<li>choose a control law containing variable parameters</li>
+<li>choose an adaptation law for adjusting those parameters</li>
+<li>analyze the convergence properties of the resulting control system</li>
+</ul>
+<h5 id="Lemma"><a href="#Lemma" class="headerlink" title="Lemma"></a>Lemma</h5><p>$$<br>e(t)=H(p)[k\phi^T (t)v(t)]<br>$$</p>
+<p>$H(p)$ is strictly positive real(SPR) transfer function, then if<br>$$<br>\dot \phi (t) = -sgn(k)\gamma e v(t)<br>$$<br>then $e(t)$ and $\phi(t)$ are globally bounded.</p>
+<p>Furthermore, if $v$ is bounded, then $e(t)\to 0$ as $t \to \infty$</p>
+<h3 id="2-Adaptive-Control-of-First-Order-Systems"><a href="#2-Adaptive-Control-of-First-Order-Systems" class="headerlink" title="2 Adaptive Control of First-Order Systems"></a>2 Adaptive Control of First-Order Systems</h3><p>Formal first-order differential equation:<br>$$<br>\dot y=-a_p y+b_pu<br>$$<br>Problem specification:<br>$$<br>\dot y_m=-a_m y_m+b_mr(t)<br>$$<br>where $r(t)$ is a bounded external signal</p>
+<p>the reference model:<br>$$<br>y_m=Mr, M=\frac {b_m} {p+a_m}<br>$$<br>choose the control law:<br>$$<br>u=\hat a_r(t)r+\hat a_y(t)y<br>$$<br>the closed-loop system is<br>$$<br>\dot y=-(a_p-\hat a_yb_p)y+\hat a_rb_pr(t)<br>$$<br>which yields zero tracking error when the plant parameters are known</p>
+<p><img src="/2021/10/26/NOTE/adaptive/first-order.png" alt="first-order"><br>$$<br>\dot e =-a_me+b_p(\tilde a_rr+\tilde a_yy)<br>$$</p>
+<p>$$<br>e=\frac 1 {a_r^*} M(\tilde a_rr+\tilde a_yy)<br>$$</p>
+<p>thus the adaptive law is<br>$$<br>\dot{\hat a_r}=-sgn(b_p)\gamma er, \dot{\hat a_y}=-sgn(b_p)\gamma ey<br>$$<br>Tracking convergence can be proved:<br>$$<br>V=\frac 1 2 e^2+\frac 1 {2 \gamma}|b_p|(\tilde a_r^2+\tilde a_y^2)<br>$$</p>
+<p>$$<br>\dot V=-a_me^2<br>$$</p>
+<p>Note: $v=[r~y]^T, a=[a_r ~ a_y]^T$</p>
+<p>parameter error converge if<br>$$<br>\forall t&gt;0, \int_t^{t+T}vv^Tdr\geq\alpha_1I<br>$$<br>converge to 0 if<br>$$<br>\int_t^{t+T}vv^Tdr\tilde a=0<br>$$<br>– <em><strong>persistent excitation</strong></em></p>
+<p>at least one sinusoidal component -&gt; persistent excitation</p>
+<h4 id="For-nonlinear-system"><a href="#For-nonlinear-system" class="headerlink" title="For nonlinear system"></a>For nonlinear system</h4><p>$$<br>\dot y=-a_p y-c_pf(y)+b_pu<br>$$</p>
+<p>choose the control law:<br>$$<br>u=\hat a_r(t)r+\hat a_f f(y) +\hat a_y(t)y<br>$$</p>
+<p>$$<br>\dot e =-\frac 1 {k_r^*} M(\tilde a_rr+\hat a_f f(y)+\tilde a_yy)<br>$$</p>
+<p>$$<br>\tilde a_f=\hat a_f-\frac {c_p} {b_p}<br>$$</p>
+<p>thus the adaptive law is<br>$$<br>\dot{\hat a_r}=-sgn(b_p)\gamma er, \dot{\hat a_y}=-sgn(b_p)\gamma ey, \dot{\hat a_f}=-sgn(b_p)\gamma ef<br>$$<br>for $v=[r<del>y</del>f]^T$</p>
+<p>parameter error converge if<br>$$<br>\forall t&gt;0, \int_t^{t+T}vv^Tdr\geq\alpha_1I<br>$$<br>Note: the convergent estimation of $m$ parameters require at least m/2 sinusoids in $r(t)$</p>
+<h3 id="3-Adaptive-Control-of-Linear-Systems-With-Full-State"><a href="#3-Adaptive-Control-of-Linear-Systems-With-Full-State" class="headerlink" title="3 Adaptive Control of Linear Systems With Full State"></a>3 Adaptive Control of Linear Systems With Full State</h3><p>Feedback</p>
+<p>$$<br>a_ny^{(n)}+a_{n-1}y^{(n-1)}+…+a_0y=u<br>$$</p>
+<p>define<br>$$<br>z(t)=y_m^{(n)}-\beta_{n-1}e^{(n-1)}-…-\beta_0e<br>$$</p>
+<p>$$<br>a_n[y^{(n)}-z]=u-a_nz-a_{n-1}y^{(n-1)}-…-a_0y<br>$$</p>
+<p>choose the control law</p>
+<p>$$<br>u=\hat a_nz+\hat a_{n-1}y^{(n-1)}+…+\hat a_0 y=v^T(t)\hat a(t)<br>$$<br>where $v(t)=[z(t)<del>y^{(n-1)}</del>…<del>\dot y</del>y]^T, \hat a(t)=[\hat a_n<del>\hat a_{n-1}</del>…<del>\hat a_1</del>\hat a_0]^T$</p>
+<p>the tracking error satisfy<br>$$<br>a_n[e^{(n)}+\beta_{n-1}e^{(n-1)}+…+\beta_0e]=v^T(t)\tilde a(t)<br>$$</p>
+<p>$$<br>\tilde a =\hat a-a<br>$$</p>
+<p> rewrite the closed-loop error dynamics  in state space form,<br>$$<br>\dot x=Ax+b[(1/a_n)v^T\tilde a], e=cx<br>$$<br> rewrite the closedloop error dynamics (8.40) in state space form,<br>$$<br>V=x^TPx+\tilde a^T\Gamma ^{-1}\tilde a<br>$$<br>the adaptive law<br>$$<br>\dot {\hat a}=-\Gamma v b^TPx<br>$$</p>
+<h3 id="4-Adaptive-Control-of-Linear-Systems-With-Output-Feedback"><a href="#4-Adaptive-Control-of-Linear-Systems-With-Output-Feedback" class="headerlink" title="4 Adaptive Control of Linear Systems With Output Feedback"></a>4 Adaptive Control of Linear Systems With Output Feedback</h3><p>LTI:<br>$$<br>W(p)=k_p \frac {Z_p(p)} {R_p(p)}<br>$$<br>the reference model<br>$$<br>W_m(p)=k_m \frac {Z_m} {R_m}<br>$$<br>where $n_m-m_m\geq n-m$</p>
+<h4 id="n-m-1"><a href="#n-m-1" class="headerlink" title="$n-m=1$"></a>$n-m=1$</h4><p>system<br>$$<br>y=\frac {k_p(p+b_p)} {p^2+a_{p1}p+a_{p2}}u<br>$$<br>control law<br>$$<br>u=k(t)r+\theta_1(t)\omega_1+\theta_2(t)\omega_2+\theta_0(t)y<br>$$<br>adaptive law<br>$$<br>\dot \theta=-sgn(k_p)\gamma e(t)\omega(t)<br>$$</p>
+<h4 id="high-order"><a href="#high-order" class="headerlink" title="high order"></a>high order</h4><p>control law is similar, but adaptive law<br>$$<br>\dot \theta=-\frac {sgn(k_p)\gamma \varepsilon\underline\omega} {1+\underline\omega^T\underline\omega}<br>$$</p>
+<p>$$<br>\alpha (t)= \frac 1 {k^*}+\phi_a(t)<br>$$</p>
+<p>$$<br>\dot \alpha=-\frac {\gamma \varepsilon \eta}{1+\underline\omega^T\underline\omega}<br>$$</p>
+<h3 id="5-Adaptive-Control-of-Nonlinear-Systems"><a href="#5-Adaptive-Control-of-Nonlinear-Systems" class="headerlink" title="5 Adaptive Control of Nonlinear Systems"></a>5 Adaptive Control of Nonlinear Systems</h3><p>when adaptive control is available for nonlinear system</p>
+<ul>
+<li>nonlinear plant dynamics can be linearly parameterized</li>
+<li>the full state is measurable</li>
+<li>nonlinearities can be canceled stably</li>
+</ul>
+<p>For SISO system:</p>
+<h4 id="Problem-specification"><a href="#Problem-specification" class="headerlink" title="Problem specification"></a>Problem specification</h4><p>$$<br>y^{(n)}+\sum_{i=1}^n \alpha_i f_i(x,t)=bu<br>$$</p>
+<p>dividing $b$ both sides<br>$$<br>hy^{(n)}+\sum_{i=1}^n a_i f_i(x,t)=u<br>$$<br>where $h=1/b,a_i=\alpha_i/b$</p>
+<h4 id="Control-law"><a href="#Control-law" class="headerlink" title="Control law"></a>Control law</h4><p>$$<br>s=e^{(n-1)}+\lambda_{n-2}e^{(n-2)}+…+\lambda_0e=\Delta(p)e<br>$$</p>
+<p>$$<br>s=y^{(n-1)}-y_r^{(n-1)}<br>$$</p>
+<p>where $y_r^{(n-1)}=y_d^{(n-1)}-\lambda_{n-2}e^{(n-2)}-…-\lambda_0e$<br>$$<br>u=hy_r^{(n)}-ks+\sum _{i=1}^na_if_i(x,t)<br>$$</p>
+<h4 id="Adaptive-law"><a href="#Adaptive-law" class="headerlink" title="Adaptive law"></a>Adaptive law</h4><p>$$<br>\dot {\hat h}=-\gamma sgn(h)sy_r^{(n)}<br>$$</p>
+<p>$$<br>\dot {\hat a_i}=-\gamma sgn(h)sf_i<br>$$</p>
+<p>$$<br>V=|h|s^2+\gamma^{-1}[\tilde h^2+\sum_{i=1}^n\tilde a_i^2]<br>$$</p>
+<h3 id="6-Robustness"><a href="#6-Robustness" class="headerlink" title="6 Robustness"></a>6 Robustness</h3><p>Some non-parametric uncertainties:</p>
+<ul>
+<li>high-frequency unmodeled dynamics, such as actuator dynamics or structural vibrations</li>
+<li>low-frequency unmodeled dynamics, such as Coulomb friction and stiction</li>
+<li>measurement noise</li>
+<li>computation roundoff error and sampling delay</li>
+</ul>
+<h4 id="Parameter-drift"><a href="#Parameter-drift" class="headerlink" title="Parameter drift"></a>Parameter drift</h4><p>if $v$ is persistently exciting, the controller is robust; if not, small uncertainty  will lead to drift and diverge sharply</p>
+<h4 id="To-cancel-parameter"><a href="#To-cancel-parameter" class="headerlink" title="To cancel parameter"></a>To cancel parameter</h4><ul>
+<li>dead-zone - for adaptive law</li>
+<li>$\sigma$-modification - replace the original integrator in the adaptation law by a low-pass filter</li>
+<li>regressor replacement - replace $y$ for $v(t)$ by $y_m$ which is independent of $n$ (noise)</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__title"><span class="post-copyright-info"><h>Adaptive control</h></span></div><div class="post-copyright__type"><span class="post-copyright-info"><a target="_blank" rel="noopener" href="http://bramberrr.github.io/2021/09/21/NOTE/Sliding/">http://bramberrr.github.io/2021/09/21/NOTE/Sliding/</a></span></div><div class="post-copyright-m"><div class="post-copyright-m-info"><div class="post-copyright-a"><h>Author</h><div class="post-copyright-cc-info"><h>B.X.</h></div></div><div class="post-copyright-c"><h>Release at</h><div class="post-copyright-cc-info"><h>2021-10-26</h></div></div><div class="post-copyright-u"><h>Update at</h><div class="post-copyright-cc-info"><h>2021-11-03</h></div></div><div class="post-copyright-c"><h>License</h><div class="post-copyright-cc-info"><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a rel="noopener" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div></div></div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/applied-nonlinear-control/">applied nonlinear control</a><a class="post-meta__tags" href="/tags/control-theory/">control theory</a></div><div class="post_share"><div class="social-share" data-image="/transparent" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/10/26/NOTE/Sliding/"><img class="next-cover" src="/transparent" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Sliding control</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/10/25/NOTE/Feedback linearization/" title="Feedback linearization"><img class="cover" src="/transparent" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-25</div><div class="title">Feedback linearization</div></div></a></div><div><a href="/2021/10/26/NOTE/Sliding/" title="Sliding control"><img class="cover" src="/transparent" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-26</div><div class="title">Sliding control</div></div></a></div><div><a href="/2021/09/24/NOTE/Lyapunov/" title="Lyapunov Theory"><img class="cover" src="/2021/09/24/NOTE/Lyapunov/local.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-24</div><div class="title">Lyapunov Theory</div></div></a></div><div><a href="/2021/09/21/NOTE/intro/" title="Introduction to nonlinear control"><img class="cover" src="/2021/09/21/NOTE/intro/vanderpol.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-21</div><div class="title">Introduction to nonlinear control</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Zhiwei Xu</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Bramberrr"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Bramberrr" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:bramberxu@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Adaptive-control"><span class="toc-number">1.</span> <span class="toc-text">Adaptive control</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Basic-Concepts-in-Adaptive-Control"><span class="toc-number">1.0.1.</span> <span class="toc-text">1 Basic Concepts in Adaptive Control</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Two-ways-to-design-adaptive-controller"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">Two ways to design adaptive controller</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#MODEL-REFERENCE-ADAPTIVE-CONTROL-MRAC"><span class="toc-number">1.0.1.1.1.</span> <span class="toc-text">MODEL-REFERENCE ADAPTIVE CONTROL (MRAC)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SELF-TUNING-CONTROLLERS-STC"><span class="toc-number">1.0.1.1.2.</span> <span class="toc-text">SELF-TUNING CONTROLLERS (STC)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Comparing"><span class="toc-number">1.0.1.1.3.</span> <span class="toc-text">Comparing:</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Design-steps"><span class="toc-number">1.0.1.2.</span> <span class="toc-text">Design steps</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Lemma"><span class="toc-number">1.0.1.2.1.</span> <span class="toc-text">Lemma</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Adaptive-Control-of-First-Order-Systems"><span class="toc-number">1.0.2.</span> <span class="toc-text">2 Adaptive Control of First-Order Systems</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#For-nonlinear-system"><span class="toc-number">1.0.2.1.</span> <span class="toc-text">For nonlinear system</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Adaptive-Control-of-Linear-Systems-With-Full-State"><span class="toc-number">1.0.3.</span> <span class="toc-text">3 Adaptive Control of Linear Systems With Full State</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Adaptive-Control-of-Linear-Systems-With-Output-Feedback"><span class="toc-number">1.0.4.</span> <span class="toc-text">4 Adaptive Control of Linear Systems With Output Feedback</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#n-m-1"><span class="toc-number">1.0.4.1.</span> <span class="toc-text">$n-m&#x3D;1$</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#high-order"><span class="toc-number">1.0.4.2.</span> <span class="toc-text">high order</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Adaptive-Control-of-Nonlinear-Systems"><span class="toc-number">1.0.5.</span> <span class="toc-text">5 Adaptive Control of Nonlinear Systems</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Problem-specification"><span class="toc-number">1.0.5.1.</span> <span class="toc-text">Problem specification</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Control-law"><span class="toc-number">1.0.5.2.</span> <span class="toc-text">Control law</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Adaptive-law"><span class="toc-number">1.0.5.3.</span> <span class="toc-text">Adaptive law</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Robustness"><span class="toc-number">1.0.6.</span> <span class="toc-text">6 Robustness</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Parameter-drift"><span class="toc-number">1.0.6.1.</span> <span class="toc-text">Parameter drift</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#To-cancel-parameter"><span class="toc-number">1.0.6.2.</span> <span class="toc-text">To cancel parameter</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Zhiwei Xu</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'EYxHbBjeScy1u6lBGRMakVlw-MdYXbMMI',
+      appKey: 'YdR9dMjjqRfCNDDcCrq3dPmm',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: true,
+      path: window.location.pathname,
+      master: '6905bff79daf9b1f7f3780934596a89a'.split(','),
+      friends: '5f625839b79c4d5fbf100809426fe49f'.split(','),
+      tagMeta: 'Host,Friend,Visitor'.split(','),
+      requiredFields: ["nick,mail"],
+      visitor: true
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('/js/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script data-pjax src="/js/bramber.js"></script><script defer src="/live2d-widget/autoload.js"></script><script async src="//at.alicdn.com/t/font_2264842_3izu8i5eoc2.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="/img/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --></body></html>
