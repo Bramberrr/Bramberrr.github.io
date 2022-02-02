@@ -16,16 +16,6 @@
   --hlscrollbar-bg: #d3af86   代码框滚动条顔色 【可选】（默认为主题主顔色）
   --hlexpand-bg: #d3af86      代码框底部展开背景色 【可选】(如果已经关掉 highlight_height_limit,可以不用配置这个)
 */
-:root {
-    --hl-color: #d3af86;
-    --hl-bg: #221a0f;
-    --hltools-bg: #3a3938;
-    --hltools-color: #fff;
-    --hlnumber-bg: #221a0f;
-    --hlnumber-color: #fff;
-    --hlscrollbar-bg: #d3af86;
-    --hlexpand-bg: #d3af86;
-}
 
   
   /* Kimbie Comment */
@@ -85,7 +75,7 @@
   #article-container figure.highlight .hljs {
     display: block;
     overflow-x: auto;
-    background: #221a0f;
+    background: transparent;
     color: #d3af86;
     padding: 0.5em;
     font-size: 16px;
