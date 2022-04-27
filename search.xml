@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>二狗蛋魔改实录</title>
+      <link href="/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/"/>
+      <url>/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="二狗蛋魔改实录"><a href="#二狗蛋魔改实录" class="headerlink" title="二狗蛋魔改实录"></a><p align="center">二狗蛋魔改实录</p></h1><h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>自己动手组装一把人体工学键盘的想法，实际上是在偶然听见我家小公主抱怨电脑用久了肩膀疼之后产生的。再加上春暖花开，万物复苏，小公主的生日也到了，所以我人生中第一把客制化键盘也就横空出世。其实在于生日礼物的诸多选项上，我属实是纠结了一阵，在一一否决了树莓派zero套件，改装版NumWorks计算器之后，实用主义の我本人终于敲定了目标（虽然在项目没展开多久就被小公主当场抓包），并且浩浩荡荡地开始了量身打造键盘+魔改的道路。</p><h3 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h3><h4 id="PCB板子"><a href="#PCB板子" class="headerlink" title="PCB板子"></a>PCB板子</h4><p>我选定键盘雏形是开源项目ergodone，它相较于原版<a href="https://www.ergodox.io/">ergodox</a>，最主要的特点是：</p><ul><li>主控由Teensy 2.0改为Pro Micro，这样我可以很方便地用Arduino IDE进行编程</li><li>IO扩展芯片由MCP23018改为MCP23017，好像就是省了点成本</li><li>为了方便部分用户作为单手键盘来使用，主手由原来的右手改为了左手，左手可单独使用</li><li>LED灯由轴灯改到左手的右上角竖排放置，更加的直观</li></ul><p>在某宝上有一家ergodone官方授权的店，但是套件已经停售了，于是我顺藤摸瓜进了K.T.E.C.的QQ群，在热心群友的帮助下，找到了店主放在github上的<a href="https://github.com/ktec-hq/ErgoDone.git">源码</a>，把其中的gerber文件夹打包成zip之后直接去嘉立创下单了~（后经小公主提醒，嘉立创将绿色阻焊层改成蓝色要加50块钱工艺费，呜呜呜我的小钱钱啊——）</p><p>板子打好之后：</p><p><img src="/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/image-20220328160504301.png" alt="image-20220328160504301"></p><p><img src="/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/image-20220328160520999.png" alt="image-20220328160520999"></p><h4 id="3D打印外壳"><a href="#3D打印外壳" class="headerlink" title="3D打印外壳"></a>3D打印外壳</h4><p>在github上找到了其他人用的PCB图纸之后，我在Solidworks里画出了外壳的毛坯，并给两个键盘都配了<strong>腕托</strong>，看起来还是很不错的：</p><p><img src="/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/image-20220328145736511.png" alt="image-20220328145736511"></p><p>毛坯状态的外壳图形实在是不好看，鉴于我们的3D打印机只有灰色和红色两种PLA耗材以及一卷TPU软耗材，我决定给零件分别加上一些材料和外观：</p><p><img src="/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/Untitled.png" alt="Untitled"></p><p>肉麻的话也刻好了，透气的腕托也雕刻好了，这个键盘看起来有那么一点点高级了。</p><h4 id="零件采购"><a href="#零件采购" class="headerlink" title="零件采购"></a>零件采购</h4><p>这把键盘的用户需求设计如下：</p><ul><li>兼具蓝牙键盘和有线键盘两种模式</li><li>既可以用自带的锂电池，也可以连电脑供电</li><li>自定义键盘布局和宏键值</li><li>主要是打字舒服</li></ul><p>于是采购零件如下：</p><ol><li>1n4148二极管 *76</li><li>cheery茶轴 *76</li><li>键帽 *76: 4个2U的, 12个1.5U的, 60个1U的</li><li>PCB卫星轴2U *4</li><li>Arduino Pro Micro micro头*1</li><li>MCP23017 *1</li><li>2.2KΩ 电阻 *2</li><li>220Ω 电阻 *3</li><li>蓝白LED *3</li><li>0.1uF陶瓷电容 *1</li><li>Type-C 锂电池充电保护模块 *1</li><li>三挡拨动开关 *1</li><li>5000mAh 锂电池 *1</li><li>USB mini B 连接器 54819-0519 *1</li><li>micro加长头 *1</li><li>3.5 毫米 TRRS 插座 SJ-43514*2</li><li>爱图仕TRRS转TRRS线 *1</li><li>HC-05 蓝牙模块 *1</li><li>M2双通铜柱19MM *14</li><li>M2螺丝8MM *28</li></ol><h3 id="电路设计"><a href="#电路设计" class="headerlink" title="电路设计"></a>电路设计</h3><p>二狗蛋本身已经设计好了键盘电路，用KiCad查看一下gerber，导出为pcb，最后得到一份原理图，可以看出属于矩阵键盘的工作模式：</p><p><img src="/2022/04/27/JOURNAL/%E4%BA%8C%E7%8B%97%E8%9B%8B%E9%AD%94%E6%94%B9%E5%AE%9E%E5%BD%95/image-20220328190819077.png" alt="image-20220328190819077"></p><h4 id="焊接元件"><a href="#焊接元件" class="headerlink" title="焊接元件"></a>焊接元件</h4><p>拿到所有材料之后，第一步是把Pro Micro焊接到左手板上，焊上电阻，二极管，USB miniB连接器，micro加长头，3.5mmTRRS插座，以及LED。右手板焊上MCP23017，电阻，二极管和LED，测试左右手能否用TRRS线连接起来。</p><h4 id="焊接轴体"><a href="#焊接轴体" class="headerlink" title="焊接轴体"></a>焊接轴体</h4><p>先在pcb上焊上四个卫星轴，接着在pcb上选择四个角落的位置，隔着定位板插上茶轴，焊接并测试通断。焊好轴体后可以安装键帽。</p><h4 id="电池组件"><a href="#电池组件" class="headerlink" title="电池组件"></a>电池组件</h4><p>将电池正负与锂电池充电保护模块连接，输出正极连接三档拨动开关，再连接到pcb上VCC，负极连接GND，用以给蓝牙键盘供电。</p><h4 id="蓝牙模块"><a href="#蓝牙模块" class="headerlink" title="蓝牙模块"></a>蓝牙模块</h4><p>VCC与GND分别连接pcb上正负口，RX，TX可以利用剩下的两个LED的IO口，连接上键盘。</p><h3 id="程序设计"><a href="#程序设计" class="headerlink" title="程序设计"></a>程序设计</h3><h4 id="测试左手"><a href="#测试左手" class="headerlink" title="测试左手"></a>测试左手</h4><h4 id="测试右手"><a href="#测试右手" class="headerlink" title="测试右手"></a>测试右手</h4><h4 id="测试USB键盘"><a href="#测试USB键盘" class="headerlink" title="测试USB键盘"></a>测试USB键盘</h4><h4 id="测试蓝牙键盘"><a href="#测试蓝牙键盘" class="headerlink" title="测试蓝牙键盘"></a>测试蓝牙键盘</h4>]]></content>
+      
+      
+      <categories>
+          
+          <category> JOURNAL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> love </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Happy St. Valentine&#39;s Day</title>
       <link href="/2022/02/14/JOURNAL/Happy_SVD/"/>
       <url>/2022/02/14/JOURNAL/Happy_SVD/</url>
