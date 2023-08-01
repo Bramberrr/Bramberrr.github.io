@@ -880,3 +880,15 @@ button.calendar-actions-buttons-button:not(:last-child){
   transform: rotateX(90deg) translate3d(0, 0, 30px);
   -webkit-transform: rotateX(90deg) translate3d(0, 0, 30px);
 }
+
+
+.li-style:hover{
+  color: #49b1f5;
+}
+
+ul,li{
+  list-style:none;
+  display:block;
+  margin: 0;
+  padding: 0;
+}
