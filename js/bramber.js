@@ -16,12 +16,12 @@ var titleTime;
 document.addEventListener('visibilitychange', function () {
     if (document.hidden) {
         //离开当前页面时标签显示内容
-        document.title = 'Hey!Look at me!';
+        document.title = 'Hey! Look at me!';
         clearTimeout(titleTime);
     }
     else {
         //返回当前页面时标签显示内容
-        document.title = 'Welcome to my page' + OriginTitile;
+        document.title = 'Welcome back! ' + OriginTitile;
         //两秒后变回正常标题
         titleTime = setTimeout(function () {
             document.title = OriginTitile;

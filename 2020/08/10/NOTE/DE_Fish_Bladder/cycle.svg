@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" role="img" aria-labelledby="t d" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title id="t">Actuation cycle of the fish bladder</title>
+  <desc id="d">Side view of the bladder in three states. 1, rest: a compressed spring inside pre-stretches the two dielectric elastomer membranes that close the ends of a rigid cylinder, so they bulge only slightly. 2, voltage on: the membranes soften and expand, bulging further out, so the enclosed volume grows. 3, voltage off: the membranes contract and the bladder returns to its original volume.</desc>
+  <rect width="900" height="330" fill="#ffffff"/>
+  <text x="450" y="26" text-anchor="middle" font-size="14" fill="#545b66">Rigid cylinder (grey) closed at both ends by DE membranes (black), with a compressed spring inside</text>
+
+  <g transform="translate(40,50)">
+    <rect x="50" y="20" width="110" height="160" fill="#f3f4f6" stroke="#1d2430" stroke-width="2"/>
+    <path d="M50,20 Q26,100 50,180 Z" fill="#222"/>
+    <path d="M160,20 Q184,100 160,180 Z" fill="#222"/>
+    <polyline points="54,100 62,88 72,112 82,88 92,112 102,88 112,112 122,88 132,112 142,88 150,100 156,100" fill="none" stroke="#6b7280" stroke-width="2"/>
+    <text x="105" y="225" text-anchor="middle" font-size="16" font-weight="700" fill="#1d2430">1. Rest</text>
+    <text x="105" y="246" text-anchor="middle" font-size="14" fill="#545b66">the spring pre-stretches</text>
+    <text x="105" y="264" text-anchor="middle" font-size="14" fill="#545b66">the membranes</text>
+  </g>
+
+  <g fill="#1d2430" stroke="#1d2430" stroke-width="3">
+    <line x1="262" y1="150" x2="312" y2="150"/><polygon points="310,142 310,158 324,150" stroke="none"/>
+    <line x1="572" y1="150" x2="622" y2="150"/><polygon points="620,142 620,158 634,150" stroke="none"/>
+  </g>
+
+  <g transform="translate(345,50)">
+    <rect x="50" y="20" width="110" height="160" fill="#f3f4f6" stroke="#1d2430" stroke-width="2"/>
+    <path d="M50,20 Q-6,100 50,180 Z" fill="#222"/>
+    <path d="M160,20 Q216,100 160,180 Z" fill="#222"/>
+    <polyline points="54,100 62,88 72,112 82,88 92,112 102,88 112,112 122,88 132,112 142,88 150,100 156,100" fill="none" stroke="#6b7280" stroke-width="2"/>
+    <text x="105" y="225" text-anchor="middle" font-size="16" font-weight="700" fill="#1d2430">2. Voltage on</text>
+    <text x="105" y="246" text-anchor="middle" font-size="14" fill="#545b66">membranes expand,</text>
+    <text x="105" y="264" text-anchor="middle" font-size="14" fill="#545b66">volume increases</text>
+  </g>
+
+  <g transform="translate(655,50)">
+    <rect x="50" y="20" width="110" height="160" fill="#f3f4f6" stroke="#1d2430" stroke-width="2"/>
+    <path d="M50,20 Q26,100 50,180 Z" fill="#222"/>
+    <path d="M160,20 Q184,100 160,180 Z" fill="#222"/>
+    <polyline points="54,100 62,88 72,112 82,88 92,112 102,88 112,112 122,88 132,112 142,88 150,100 156,100" fill="none" stroke="#6b7280" stroke-width="2"/>
+    <text x="105" y="225" text-anchor="middle" font-size="16" font-weight="700" fill="#1d2430">3. Voltage off</text>
+    <text x="105" y="246" text-anchor="middle" font-size="14" fill="#545b66">membranes recover,</text>
+    <text x="105" y="264" text-anchor="middle" font-size="14" fill="#545b66">back to the rest volume</text>
+  </g>
+</svg>

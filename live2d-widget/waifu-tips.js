@@ -38,11 +38,11 @@ function loadWidget(config) {
 	function randomSelection(obj) {
 		return Array.isArray(obj) ? obj[Math.floor(Math.random() * obj.length)] : obj;
 	}
-	// 检测用户活动状态，并在空闲时显示消息
+	// Track user activity and show a message when the visitor is idle
 	let userAction = false,
 		userActionTimer,
 		messageTimer,
-		messageArray = ["好久不见，日子过得好快呢……", "大坏蛋！你都多久没理人家了呀，嘤嘤嘤～", "嗨～快来逗我玩吧！", "拿小拳拳锤你胸口！", "记得把小家加入 Adblock 白名单哦！"];
+		messageArray = ["Long time no see! Time really flies...", "Meanie! You've been ignoring me for ages~", "Hey~ come play with me!", "*pokes you* Pay attention to me!", "Don't forget to add this site to your ad-blocker's allowlist!"];
 	window.addEventListener("mousemove", () => userAction = true);
 	window.addEventListener("keydown", () => userAction = true);
 	setInterval(() => {
@@ -58,7 +58,7 @@ function loadWidget(config) {
 	}, 1000);
 
 	(function registerEventListener() {
-		document.querySelector("#waifu-tool .fa-comment").addEventListener("click", showHitokoto);
+		document.querySelector("#waifu-tool .fa-comment").addEventListener("click", showQuote);
 		document.querySelector("#waifu-tool .fa-paper-plane").addEventListener("click", () => {
 			if (window.Asteroids) {
 				if (!window.ASTEROIDSPLAYERS) window.ASTEROIDSPLAYERS = [];
@@ -72,7 +72,7 @@ function loadWidget(config) {
 		document.querySelector("#waifu-tool .fa-user-circle").addEventListener("click", loadOtherModel);
 		document.querySelector("#waifu-tool .fa-street-view").addEventListener("click", loadRandModel);
 		document.querySelector("#waifu-tool .fa-camera-retro").addEventListener("click", () => {
-			showMessage("照好了嘛，是不是很可爱呢？", 6000, 9);
+			showMessage("Got the shot? Don't I look cute?", 6000, 9);
 			Live2D.captureName = "photo.png";
 			Live2D.captureFrame = true;
 		});
@@ -81,7 +81,7 @@ function loadWidget(config) {
 		});
 		document.querySelector("#waifu-tool .fa-times").addEventListener("click", () => {
 			localStorage.setItem("waifu-display", Date.now());
-			showMessage("愿你有一天能与重要的人重逢。", 2000, 11);
+			showMessage("May you meet again with someone dear to you one day.", 2000, 11);
 			document.getElementById("waifu").style.bottom = "-500px";
 			setTimeout(() => {
 				document.getElementById("waifu").style.display = "none";
@@ -91,53 +91,56 @@ function loadWidget(config) {
 		const devtools = () => {};
 		console.log("%c", devtools);
 		devtools.toString = () => {
-			showMessage("哈哈，你打开了控制台，是想要看看我的小秘密吗？", 6000, 9);
+			showMessage("Haha, you opened the console! Trying to peek at my little secrets?", 6000, 9);
 		};
 		window.addEventListener("copy", () => {
-			showMessage("你都复制了些什么呀，转载要记得加上出处哦！", 6000, 9);
+			showMessage("What did you copy? Remember to credit the source if you share it!", 6000, 9);
 		});
 		window.addEventListener("visibilitychange", () => {
-			if (!document.hidden) showMessage("哇，你终于回来了～", 6000, 9);
+			if (!document.hidden) showMessage("Yay, you're finally back~", 6000, 9);
 		});
 	})();
 
 	(function welcomeMessage() {
 		let text;
-		if (location.pathname === "/") { // 如果是主页
+		if (location.pathname === "/") { // Home page
 			const now = new Date().getHours();
-			if (now > 5 && now <= 7) text = "早上好！一日之计在于晨，美好的一天就要开始了。";
-			else if (now > 7 && now <= 11) text = "上午好！工作顺利嘛，不要久坐，多起来走动走动哦！";
-			else if (now > 11 && now <= 13) text = "中午了，工作了一个上午，现在是午餐时间！";
-			else if (now > 13 && now <= 17) text = "午后很容易犯困呢，今天的运动目标完成了吗？";
-			else if (now > 17 && now <= 19) text = "傍晚了！窗外夕阳的景色很美丽呢，最美不过夕阳红～";
-			else if (now > 19 && now <= 21) text = "晚上好，今天过得怎么样？";
-			else if (now > 21 && now <= 23) text = ["已经这么晚了呀，早点休息吧，晚安～", "深夜时要爱护眼睛呀！"];
-			else text = "你是夜猫子呀？这么晚还不睡觉，明天起的来嘛？";
+			if (now > 5 && now <= 7) text = "Good morning! The early bird gets the worm. A lovely day is about to begin.";
+			else if (now > 7 && now <= 11) text = "Good morning! Is work going well? Don't sit too long, get up and stretch!";
+			else if (now > 11 && now <= 13) text = "It's noon! You've worked all morning, time for lunch!";
+			else if (now > 13 && now <= 17) text = "Afternoons make me sleepy... Have you hit your exercise goal today?";
+			else if (now > 17 && now <= 19) text = "It's evening! The sunset outside is so pretty~";
+			else if (now > 19 && now <= 21) text = "Good evening! How was your day?";
+			else if (now > 21 && now <= 23) text = ["It's getting late, get some rest soon. Good night~", "Take care of your eyes this late at night!"];
+			else text = "Are you a night owl? Still up this late? Can you even get up tomorrow?";
 		} else if (document.referrer !== "") {
 			const referrer = new URL(document.referrer),
 				domain = referrer.hostname.split(".")[1];
-			if (location.hostname === referrer.hostname) text = `欢迎阅读<span>「${document.title.split(" - ")[0]}」</span>`;
-			else if (domain === "baidu") text = `Hello！来自 百度搜索 的朋友<br>你是搜索 <span>${referrer.search.split("&wd=")[1].split("&")[0]}</span> 找到的我吗？`;
-			else if (domain === "so") text = `Hello！来自 360搜索 的朋友<br>你是搜索 <span>${referrer.search.split("&q=")[1].split("&")[0]}</span> 找到的我吗？`;
-			else if (domain === "google") text = `Hello！来自 谷歌搜索 的朋友<br>欢迎阅读<span>「${document.title.split(" - ")[0]}」</span>`;
-			else text = `Hello！来自 <span>${referrer.hostname}</span> 的朋友`;
+			if (location.hostname === referrer.hostname) text = `Welcome! Enjoy reading <span>"${document.title.split(" - ")[0]}"</span>`;
+			else if (domain === "baidu") text = `Hello, friend from Baidu Search!<br>Did you find me by searching <span>${referrer.search.split("&wd=")[1].split("&")[0]}</span>?`;
+			else if (domain === "so") text = `Hello, friend from 360 Search!<br>Did you find me by searching <span>${referrer.search.split("&q=")[1].split("&")[0]}</span>?`;
+			else if (domain === "google") text = `Hello, friend from Google Search!<br>Enjoy reading <span>"${document.title.split(" - ")[0]}"</span>`;
+			else text = `Hello, friend from <span>${referrer.hostname}</span>!`;
 		} else {
-			text = `欢迎阅读<span>「${document.title.split(" - ")[0]}」</span>`;
+			text = `Welcome! Enjoy reading <span>"${document.title.split(" - ")[0]}"</span>`;
 		}
 		showMessage(text, 7000, 8);
 	})();
 
-	function showHitokoto() {
-		// 增加 hitokoto.cn 的 API
-		fetch("https://v1.hitokoto.cn")
-			.then(response => response.json())
-			.then(result => {
-				const text = `这句一言来自 <span>「${result.from}」</span>，是 <span>${result.creator}</span> 在 hitokoto.cn 投稿的。`;
-				showMessage(result.hitokoto, 6000, 9);
-				setTimeout(() => {
-					showMessage(text, 4000, 9);
-				}, 6000);
-			});
+	// Local English quotes (replaces the remote hitokoto.cn quote API)
+	const quotes = [
+		{ text: "The important thing is not to stop questioning. Curiosity has its own reason for existing.", author: "Albert Einstein" },
+		{ text: "I have no special talents. I am only passionately curious.", author: "Albert Einstein" },
+		{ text: "We are made of star-stuff.", author: "Carl Sagan" },
+		{ text: "We are a way for the cosmos to know itself.", author: "Carl Sagan" },
+		{ text: "Look up at the stars and not down at your feet.", author: "Stephen Hawking" },
+		{ text: "Nothing in life is to be feared, it is only to be understood.", author: "Marie Curie" },
+		{ text: "The first principle is that you must not fool yourself, and you are the easiest person to fool.", author: "Richard Feynman" }
+	];
+
+	function showQuote() {
+		const quote = randomSelection(quotes);
+		showMessage(`"${quote.text}"<br>&mdash; <span>${quote.author}</span>`, 6000, 9);
 	}
 
 	function showMessage(text, timeout, priority) {
@@ -161,9 +164,9 @@ function loadWidget(config) {
 		let modelId = 6,
 			modelTexturesId = localStorage.getItem("modelTexturesId");
 		if (modelId === null) {
-			// 首次访问加载 指定模型 的 指定材质
-			modelId = 6; // 模型 ID
-			modelTexturesId = 53; // 材质 ID
+			// On first visit, load the specified texture of the specified model
+			modelId = 6; // Model ID
+			modelTexturesId = 53; // Texture ID
 		}
 		loadModel(modelId, modelTexturesId);
 		fetch(waifuPath)
@@ -216,7 +219,7 @@ function loadWidget(config) {
 			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
 		} else {
 			loadlive2d("live2d", `${apiPath}get/?id=${modelId}-${modelTexturesId}`);
-			console.log(`Live2D 模型 ${modelId}-${modelTexturesId} 加载完成`);
+			console.log(`Live2D model ${modelId}-${modelTexturesId} loaded`);
 		}
 	}
 
@@ -227,14 +230,14 @@ function loadWidget(config) {
 			if (!modelList) await loadModelList();
 			const target = randomSelection(modelList.models[modelId]);
 			loadlive2d("live2d", `${cdnPath}model/${target}/index.json`);
-			showMessage("我的新衣服好看嘛？", 4000, 10);
+			showMessage("Do you like my new outfit?", 4000, 10);
 		} else {
-			// 可选 "rand"(随机), "switch"(顺序)
+			// Options: "rand" (random), "switch" (sequential)
 			fetch(`${apiPath}rand_textures/?id=${modelId}-${modelTexturesId}`)
 				.then(response => response.json())
 				.then(result => {
-					if (result.textures.id === 1 && (modelTexturesId === 1 || modelTexturesId === 0)) showMessage("我还没有其他衣服呢！", 4000, 10);
-					else loadModel(modelId, result.textures.id, "我的新衣服好看嘛？");
+					if (result.textures.id === 1 && (modelTexturesId === 1 || modelTexturesId === 0)) showMessage("I don't have any other outfits yet!", 4000, 10);
+					else loadModel(modelId, result.textures.id, "Do you like my new outfit?");
 				});
 		}
 	}
@@ -244,12 +247,12 @@ function loadWidget(config) {
 		if (useCDN) {
 			if (!modelList) await loadModelList();
 			const index = (++modelId >= modelList.models.length) ? 0 : modelId;
-			loadModel(index, 0, modelList.messages[index]);
+			loadModel(index, 0, "Hi! Nice to meet you~");
 		} else {
 			fetch(`${apiPath}switch/?id=${modelId}`)
 				.then(response => response.json())
 				.then(result => {
-					loadModel(result.model.id, 0, result.model.message);
+					loadModel(result.model.id, 0, "Hi! Nice to meet you~");
 				});
 		}
 	}
@@ -263,7 +266,7 @@ function initWidget(config, apiPath) {
 		};
 	}
 	document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle">
-			<span>看板娘</span>
+			<span>Mascot</span>
 		</div>`);
 	const toggle = document.getElementById("waifu-toggle");
 	toggle.addEventListener("click", () => {
