@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep-Learned Texture A/S — Zhiwei Xu</title>
+  <meta name="description" content="Project page for “Deep-Learned Texture Analysis/Synthesis Finally Beats Traditional Techniques”: visual comparisons of StyleGAN3-based texture analysis/synthesis against Portilla–Simoncelli.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .paper-head { padding-top: 3rem; padding-bottom: 1.5rem; text-align: center; }
+    .paper-head h1 { max-width: 46rem; margin: .25rem auto .9rem; }
+    .authors { margin: 0 0 .2rem; font-size: 1.1rem; }
+    .affil { margin: 0 0 1.25rem; color: var(--muted); font-size: .95rem; }
+    .paper-head .links { justify-content: center; }
+    .links .soon {
+      display: inline-block;
+      padding: .4rem .9rem;
+      border: 1px dashed var(--muted);
+      border-radius: 999px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .95rem;
+    }
+    .legend { display: grid; gap: .5rem; margin: 0 0 1rem; }
+    .legend > div { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; }
+    .legend dt { font-weight: 600; }
+    .legend dd { margin: 0; color: var(--muted); }
+
+    .gallery { width: 100%; border-collapse: separate; border-spacing: 6px; table-layout: fixed; margin: 0 -6px; width: calc(100% + 12px); }
+    .gallery thead th {
+      position: sticky; top: 3.4rem; z-index: 2;
+      padding: .45rem .25rem;
+      background: var(--bg);
+      border-bottom: 2px solid var(--accent);
+      font-size: .95rem; text-align: center;
+    }
+    .gallery thead th.ours { color: var(--accent); }
+    .gallery td { padding: 0; }
+    .gallery img { display: block; width: 100%; height: auto; border-radius: 4px; background: var(--rule); }
+    .note { color: var(--muted); font-size: .95rem; }
+
+    @media (max-width: 40rem) {
+      .legend > div { grid-template-columns: 1fr; gap: 0; }
+      .gallery { border-spacing: 3px; margin: 0 -3px; width: calc(100% + 6px); }
+      .gallery thead th { top: 0; font-size: .8rem; padding: .35rem .1rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/research/">Zhiwei Xu</a>
+      <nav aria-label="Page">
+        <ul class="nav-list">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#results">Visual results</a></li>
+          <li><a href="/research/">Research <span aria-hidden="true">↩</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="paper-head wrap" aria-labelledby="paper-title">
+      <p class="eyebrow">Texture analysis / synthesis</p>
+      <h1 id="paper-title">Deep-Learned Texture Analysis/Synthesis Finally Beats Traditional Techniques</h1>
+      <p class="authors"><strong>Zhiwei Xu</strong>, Huib de Ridder, <a href="https://www.hajim.rochester.edu/ece/people/faculty/sharma_gaurav/index.html">Gaurav Sharma</a>, <a href="https://www.eecs.northwestern.edu/~pappas/">Thrasyvoulos N. Pappas</a></p>
+      <p class="affil">Northwestern University · University of Rochester</p>
+      <ul class="links" aria-label="Paper links">
+        <li><span class="soon">arXiv — coming soon</span></li>
+        <li><a href="/research/">Back to research</a></li>
+      </ul>
+    </section>
+
+    <section id="overview" class="wrap" aria-labelledby="overview-title">
+      <h2 id="overview-title">Overview</h2>
+      <p>
+        Texture analysis/synthesis (A/S) maps a texture to a compact representation, then regenerates
+        a perceptually equivalent texture from it. For years, the classical Portilla–Simoncelli (PS) model
+        has been the bar that GAN-based A/S methods could not reach.
+      </p>
+      <p>
+        Our StyleGAN3-based framework combines a new dataset of 6,466 homogeneous textures, a
+        texture-dependent loss that balances Sliced Wasserstein Distance and LPIPS per image, and
+        retrieval-initialized multi-start latent optimization. In blind human comparisons, it was preferred
+        over or tied with PS <strong>92.4%</strong> of the time, while keeping a compact, manipulable latent code.
+      </p>
+      <dl class="legend">
+        <div><dt>Original</dt><dd>The reference texture (256 × 256).</dd></div>
+        <div><dt>PS</dt><dd>Portilla–Simoncelli, the classical statistical A/S baseline.</dd></div>
+        <div><dt>Ours (W)</dt><dd>A single compact 512-dimensional latent code shared across all synthesis layers.</dd></div>
+        <div><dt>Ours (W+)</dt><dd>A layer-wise latent code: less compact, more flexible.</dd></div>
+      </dl>
+    </section>
+
+    <section id="results" class="wrap" aria-labelledby="results-title">
+      <h2 id="results-title">Visual results</h2>
+      <p class="note">Reconstructions of 40 textures from the external test set, none of which were seen during training.
+        Each row is one texture.</p>
+      <table class="gallery">
+        <caption class="sr-only">Original textures and their reconstructions by Portilla–Simoncelli and our two variants</caption>
+        <thead>
+          <tr>
+            <th scope="col">Original</th>
+            <th scope="col">PS</th>
+            <th scope="col" class="ours">Ours (W)</th>
+            <th scope="col" class="ours">Ours (W+)</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><img src="img/t01-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 1, original"></td>
+          <td><img src="img/t01-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 1, Portilla–Simoncelli"></td>
+          <td><img src="img/t01-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 1, ours (W)"></td>
+          <td><img src="img/t01-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 1, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t02-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 2, original"></td>
+          <td><img src="img/t02-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 2, Portilla–Simoncelli"></td>
+          <td><img src="img/t02-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 2, ours (W)"></td>
+          <td><img src="img/t02-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 2, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t03-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 3, original"></td>
+          <td><img src="img/t03-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 3, Portilla–Simoncelli"></td>
+          <td><img src="img/t03-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 3, ours (W)"></td>
+          <td><img src="img/t03-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 3, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t04-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 4, original"></td>
+          <td><img src="img/t04-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 4, Portilla–Simoncelli"></td>
+          <td><img src="img/t04-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 4, ours (W)"></td>
+          <td><img src="img/t04-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 4, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t05-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 5, original"></td>
+          <td><img src="img/t05-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 5, Portilla–Simoncelli"></td>
+          <td><img src="img/t05-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 5, ours (W)"></td>
+          <td><img src="img/t05-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 5, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t06-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 6, original"></td>
+          <td><img src="img/t06-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 6, Portilla–Simoncelli"></td>
+          <td><img src="img/t06-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 6, ours (W)"></td>
+          <td><img src="img/t06-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 6, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t07-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 7, original"></td>
+          <td><img src="img/t07-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 7, Portilla–Simoncelli"></td>
+          <td><img src="img/t07-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 7, ours (W)"></td>
+          <td><img src="img/t07-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 7, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t08-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 8, original"></td>
+          <td><img src="img/t08-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 8, Portilla–Simoncelli"></td>
+          <td><img src="img/t08-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 8, ours (W)"></td>
+          <td><img src="img/t08-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 8, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t09-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 9, original"></td>
+          <td><img src="img/t09-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 9, Portilla–Simoncelli"></td>
+          <td><img src="img/t09-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 9, ours (W)"></td>
+          <td><img src="img/t09-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 9, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t10-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 10, original"></td>
+          <td><img src="img/t10-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 10, Portilla–Simoncelli"></td>
+          <td><img src="img/t10-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 10, ours (W)"></td>
+          <td><img src="img/t10-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 10, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t11-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 11, original"></td>
+          <td><img src="img/t11-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 11, Portilla–Simoncelli"></td>
+          <td><img src="img/t11-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 11, ours (W)"></td>
+          <td><img src="img/t11-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 11, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t12-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 12, original"></td>
+          <td><img src="img/t12-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 12, Portilla–Simoncelli"></td>
+          <td><img src="img/t12-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 12, ours (W)"></td>
+          <td><img src="img/t12-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 12, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t13-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 13, original"></td>
+          <td><img src="img/t13-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 13, Portilla–Simoncelli"></td>
+          <td><img src="img/t13-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 13, ours (W)"></td>
+          <td><img src="img/t13-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 13, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t14-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 14, original"></td>
+          <td><img src="img/t14-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 14, Portilla–Simoncelli"></td>
+          <td><img src="img/t14-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 14, ours (W)"></td>
+          <td><img src="img/t14-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 14, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t15-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 15, original"></td>
+          <td><img src="img/t15-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 15, Portilla–Simoncelli"></td>
+          <td><img src="img/t15-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 15, ours (W)"></td>
+          <td><img src="img/t15-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 15, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t16-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 16, original"></td>
+          <td><img src="img/t16-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 16, Portilla–Simoncelli"></td>
+          <td><img src="img/t16-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 16, ours (W)"></td>
+          <td><img src="img/t16-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 16, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t17-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 17, original"></td>
+          <td><img src="img/t17-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 17, Portilla–Simoncelli"></td>
+          <td><img src="img/t17-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 17, ours (W)"></td>
+          <td><img src="img/t17-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 17, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t18-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 18, original"></td>
+          <td><img src="img/t18-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 18, Portilla–Simoncelli"></td>
+          <td><img src="img/t18-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 18, ours (W)"></td>
+          <td><img src="img/t18-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 18, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t19-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 19, original"></td>
+          <td><img src="img/t19-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 19, Portilla–Simoncelli"></td>
+          <td><img src="img/t19-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 19, ours (W)"></td>
+          <td><img src="img/t19-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 19, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t20-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 20, original"></td>
+          <td><img src="img/t20-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 20, Portilla–Simoncelli"></td>
+          <td><img src="img/t20-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 20, ours (W)"></td>
+          <td><img src="img/t20-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 20, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t21-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 21, original"></td>
+          <td><img src="img/t21-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 21, Portilla–Simoncelli"></td>
+          <td><img src="img/t21-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 21, ours (W)"></td>
+          <td><img src="img/t21-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 21, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t22-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 22, original"></td>
+          <td><img src="img/t22-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 22, Portilla–Simoncelli"></td>
+          <td><img src="img/t22-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 22, ours (W)"></td>
+          <td><img src="img/t22-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 22, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t23-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 23, original"></td>
+          <td><img src="img/t23-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 23, Portilla–Simoncelli"></td>
+          <td><img src="img/t23-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 23, ours (W)"></td>
+          <td><img src="img/t23-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 23, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t24-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 24, original"></td>
+          <td><img src="img/t24-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 24, Portilla–Simoncelli"></td>
+          <td><img src="img/t24-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 24, ours (W)"></td>
+          <td><img src="img/t24-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 24, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t25-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 25, original"></td>
+          <td><img src="img/t25-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 25, Portilla–Simoncelli"></td>
+          <td><img src="img/t25-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 25, ours (W)"></td>
+          <td><img src="img/t25-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 25, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t26-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 26, original"></td>
+          <td><img src="img/t26-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 26, Portilla–Simoncelli"></td>
+          <td><img src="img/t26-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 26, ours (W)"></td>
+          <td><img src="img/t26-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 26, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t27-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 27, original"></td>
+          <td><img src="img/t27-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 27, Portilla–Simoncelli"></td>
+          <td><img src="img/t27-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 27, ours (W)"></td>
+          <td><img src="img/t27-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 27, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t28-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 28, original"></td>
+          <td><img src="img/t28-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 28, Portilla–Simoncelli"></td>
+          <td><img src="img/t28-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 28, ours (W)"></td>
+          <td><img src="img/t28-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 28, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t29-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 29, original"></td>
+          <td><img src="img/t29-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 29, Portilla–Simoncelli"></td>
+          <td><img src="img/t29-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 29, ours (W)"></td>
+          <td><img src="img/t29-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 29, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t30-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 30, original"></td>
+          <td><img src="img/t30-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 30, Portilla–Simoncelli"></td>
+          <td><img src="img/t30-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 30, ours (W)"></td>
+          <td><img src="img/t30-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 30, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t31-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 31, original"></td>
+          <td><img src="img/t31-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 31, Portilla–Simoncelli"></td>
+          <td><img src="img/t31-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 31, ours (W)"></td>
+          <td><img src="img/t31-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 31, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t32-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 32, original"></td>
+          <td><img src="img/t32-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 32, Portilla–Simoncelli"></td>
+          <td><img src="img/t32-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 32, ours (W)"></td>
+          <td><img src="img/t32-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 32, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t33-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 33, original"></td>
+          <td><img src="img/t33-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 33, Portilla–Simoncelli"></td>
+          <td><img src="img/t33-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 33, ours (W)"></td>
+          <td><img src="img/t33-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 33, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t34-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 34, original"></td>
+          <td><img src="img/t34-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 34, Portilla–Simoncelli"></td>
+          <td><img src="img/t34-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 34, ours (W)"></td>
+          <td><img src="img/t34-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 34, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t35-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 35, original"></td>
+          <td><img src="img/t35-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 35, Portilla–Simoncelli"></td>
+          <td><img src="img/t35-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 35, ours (W)"></td>
+          <td><img src="img/t35-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 35, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t36-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 36, original"></td>
+          <td><img src="img/t36-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 36, Portilla–Simoncelli"></td>
+          <td><img src="img/t36-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 36, ours (W)"></td>
+          <td><img src="img/t36-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 36, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t37-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 37, original"></td>
+          <td><img src="img/t37-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 37, Portilla–Simoncelli"></td>
+          <td><img src="img/t37-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 37, ours (W)"></td>
+          <td><img src="img/t37-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 37, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t38-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 38, original"></td>
+          <td><img src="img/t38-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 38, Portilla–Simoncelli"></td>
+          <td><img src="img/t38-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 38, ours (W)"></td>
+          <td><img src="img/t38-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 38, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t39-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 39, original"></td>
+          <td><img src="img/t39-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 39, Portilla–Simoncelli"></td>
+          <td><img src="img/t39-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 39, ours (W)"></td>
+          <td><img src="img/t39-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 39, ours (W+)"></td>
+        </tr>
+        <tr>
+          <td><img src="img/t40-orig.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 40, original"></td>
+          <td><img src="img/t40-ps.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 40, Portilla–Simoncelli"></td>
+          <td><img src="img/t40-w.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 40, ours (W)"></td>
+          <td><img src="img/t40-wplus.webp" width="256" height="256" loading="lazy" decoding="async" alt="Texture 40, ours (W+)"></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year">2026</span> Zhiwei Xu · <a href="/research/">Research</a> · <a href="/">Personal blog</a></p>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear()</script>
+</body>
+</html>

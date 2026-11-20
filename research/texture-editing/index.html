@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Texture Attribute Editing — Zhiwei Xu</title>
+  <meta name="description" content="Project page for perceptual texture attribute editing: interactive glossiness, roughness and surface-relief edits of natural textures.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .paper-head { padding-top: 3rem; padding-bottom: 1.5rem; text-align: center; }
+    .paper-head h1 { max-width: 46rem; margin: .25rem auto .9rem; }
+    .authors { margin: 0 0 .2rem; font-size: 1.1rem; }
+    .affil, .venue { margin: 0 0 .4rem; color: var(--muted); font-size: .95rem; }
+    .venue { margin-bottom: 1.25rem; }
+    .paper-head .links { justify-content: center; }
+    .soon { display: inline-block; padding: .4rem .9rem; border: 1px dashed var(--muted); border-radius: 999px; color: var(--muted); font-weight: 600; font-size: .95rem; }
+    .note { color: var(--muted); font-size: .95rem; }
+
+    .slider-row {
+      position: sticky; top: 3.4rem; z-index: 2;
+      display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem;
+      padding: .6rem 0; margin-bottom: .75rem; background: var(--bg);
+    }
+    .slider-row input[type=range] { flex: 1 1 12rem; accent-color: var(--accent); min-height: 24px; }
+    .end { font-weight: 600; font-size: .92rem; }
+    .level { min-width: 2.2rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); }
+    .play { padding: .35rem .9rem; border: 1px solid var(--accent); border-radius: 6px; background: transparent; color: var(--accent); font: inherit; font-size: .92rem; cursor: pointer; }
+    .play:hover, .play[aria-pressed=true] { background: var(--accent-soft); }
+
+    .cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 0 0 1rem; padding: 0; list-style: none; }
+    .cards img { display: block; width: 100%; height: auto; border-radius: 4px; background: var(--rule); }
+
+    details { margin-bottom: 1.5rem; }
+    summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: .3rem 0; }
+    .strip-wrap { overflow-x: auto; }
+    .strips { border-collapse: separate; border-spacing: 2px; width: 100%; min-width: 36rem; table-layout: fixed; }
+    .strips th { font-size: .8rem; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .strips tbody th { width: 1.6rem; }
+    .strips thead td { width: 1.6rem; }
+    .strips td { padding: 0; }
+    .strips img { display: block; width: 100%; height: auto; }
+
+    @media (max-width: 40rem) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .slider-row { top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/research/">Zhiwei Xu</a>
+      <nav aria-label="Page">
+        <ul class="nav-list">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#gloss">Glossiness</a></li>
+          <li><a href="#rough">Roughness</a></li>
+          <li><a href="#relief">Surface relief</a></li>
+          <li><a href="/research/">Research <span aria-hidden="true">↩</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="paper-head wrap" aria-labelledby="paper-title">
+      <p class="eyebrow">Perceptual texture attributes</p>
+      <h1 id="paper-title">Finetuning Vision-Language Models for Perceptual Texture Attribute Editing Trajectories</h1>
+      <p class="authors"><strong>Zhiwei Xu</strong>, <a href="https://www.eecs.northwestern.edu/~pappas/">Thrasyvoulos N. Pappas</a>, <a href="https://www.hajim.rochester.edu/ece/people/faculty/sharma_gaurav/index.html">Gaurav Sharma</a></p>
+      <p class="affil">Northwestern University · University of Rochester</p>
+      <p class="venue">In preparation for ACM SIGGRAPH 2027</p>
+      <ul class="links" aria-label="Paper links">
+        <li><span class="soon">Paper — coming soon</span></li>
+        <li><span class="soon">Code — coming soon</span></li>
+        <li><a href="/research/">Back to research</a></li>
+      </ul>
+    </section>
+
+    <section id="overview" class="wrap" aria-labelledby="overview-title">
+      <h2 id="overview-title">Overview</h2>
+      <p>
+        We edit how a natural texture <em>looks</em>: we continuously increase or decrease a requested attribute
+        (glossiness, roughness or surface relief) while keeping the texture's identity and natural appearance,
+        and changing other attributes as little as possible.
+      </p>
+      <p>
+        Textures are reconstructed with a texture-trained StyleGAN3, refined with image-specific generator weight
+        offsets, and edited in StyleSpace. Vision–language models give a natural way to describe the attribute,
+        but their responses entangle unrelated properties; maximizing CLIP similarity to "glossy", for example,
+        can shift hue instead of adding gloss. A single fixed direction also has a limited useful range.
+        We therefore model each edit as a conditional editing flow: an image- and attribute-specific trajectory
+        guided by a graph of attribute associations from CLIP, calibrated by StyleSpace interventions.
+      </p>
+      <p class="note">Each example below is a nine-step trajectory from −4 to +4; 0 is the unedited reconstruction.
+        Drag a slider, or press Play, to move all ten examples of that attribute together.</p>
+    </section>
+
+    <section id="gloss" class="wrap attr" data-attr="gloss" data-name="Glossiness" data-lo="Matte" data-hi="Glossy" aria-labelledby="gloss-title">
+      <h2 id="gloss-title">Glossiness</h2>
+      <p class="note">Highlights and specular sheen strengthen or fade while the texture keeps its colour and layout.</p>
+      <div class="slider-row">
+        <label class="sr-only" for="gloss-slider">Glossiness edit level, from Matte (−4) to Glossy (+4)</label>
+        <span class="end" aria-hidden="true">Matte</span>
+        <input type="range" id="gloss-slider" min="-4" max="4" step="1" value="0" aria-valuetext="0, unedited">
+        <span class="end" aria-hidden="true">Glossy</span>
+        <output for="gloss-slider" class="level" aria-hidden="true">0</output>
+        <button type="button" class="play" aria-pressed="false">Play</button>
+      </div>
+      <ul class="cards">
+          <li><img src="img/gloss/01_0.webp" data-n="01" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, unedited reconstruction"></li>
+          <li><img src="img/gloss/02_0.webp" data-n="02" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, unedited reconstruction"></li>
+          <li><img src="img/gloss/03_0.webp" data-n="03" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, unedited reconstruction"></li>
+          <li><img src="img/gloss/04_0.webp" data-n="04" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, unedited reconstruction"></li>
+          <li><img src="img/gloss/05_0.webp" data-n="05" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, unedited reconstruction"></li>
+          <li><img src="img/gloss/06_0.webp" data-n="06" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, unedited reconstruction"></li>
+          <li><img src="img/gloss/07_0.webp" data-n="07" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, unedited reconstruction"></li>
+          <li><img src="img/gloss/08_0.webp" data-n="08" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, unedited reconstruction"></li>
+          <li><img src="img/gloss/09_0.webp" data-n="09" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, unedited reconstruction"></li>
+          <li><img src="img/gloss/10_0.webp" data-n="10" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, unedited reconstruction"></li>
+      </ul>
+      <details>
+        <summary>Show all nine steps for every example</summary>
+        <div class="strip-wrap">
+        <table class="strips">
+          <caption class="sr-only">Glossiness editing trajectories, from −4 (Matte) to +4 (Glossy); 0 is the unedited reconstruction</caption>
+          <thead><tr><td></td><th scope="col">-4</th><th scope="col">-3</th><th scope="col">-2</th><th scope="col">-1</th><th scope="col">0</th><th scope="col">+1</th><th scope="col">+2</th><th scope="col">+3</th><th scope="col">+4</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1</th><td><img src="img/gloss/01_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step -4" ></td><td><img src="img/gloss/01_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step -3" ></td><td><img src="img/gloss/01_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step -2" ></td><td><img src="img/gloss/01_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step -1" ></td><td><img src="img/gloss/01_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step 0" ></td><td><img src="img/gloss/01_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step +1" ></td><td><img src="img/gloss/01_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step +2" ></td><td><img src="img/gloss/01_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step +3" ></td><td><img src="img/gloss/01_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 1, step +4" ></td></tr>
+            <tr><th scope="row">2</th><td><img src="img/gloss/02_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step -4" ></td><td><img src="img/gloss/02_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step -3" ></td><td><img src="img/gloss/02_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step -2" ></td><td><img src="img/gloss/02_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step -1" ></td><td><img src="img/gloss/02_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step 0" ></td><td><img src="img/gloss/02_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step +1" ></td><td><img src="img/gloss/02_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step +2" ></td><td><img src="img/gloss/02_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step +3" ></td><td><img src="img/gloss/02_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 2, step +4" ></td></tr>
+            <tr><th scope="row">3</th><td><img src="img/gloss/03_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step -4" ></td><td><img src="img/gloss/03_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step -3" ></td><td><img src="img/gloss/03_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step -2" ></td><td><img src="img/gloss/03_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step -1" ></td><td><img src="img/gloss/03_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step 0" ></td><td><img src="img/gloss/03_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step +1" ></td><td><img src="img/gloss/03_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step +2" ></td><td><img src="img/gloss/03_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step +3" ></td><td><img src="img/gloss/03_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 3, step +4" ></td></tr>
+            <tr><th scope="row">4</th><td><img src="img/gloss/04_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step -4" ></td><td><img src="img/gloss/04_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step -3" ></td><td><img src="img/gloss/04_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step -2" ></td><td><img src="img/gloss/04_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step -1" ></td><td><img src="img/gloss/04_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step 0" ></td><td><img src="img/gloss/04_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step +1" ></td><td><img src="img/gloss/04_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step +2" ></td><td><img src="img/gloss/04_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step +3" ></td><td><img src="img/gloss/04_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 4, step +4" ></td></tr>
+            <tr><th scope="row">5</th><td><img src="img/gloss/05_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step -4" ></td><td><img src="img/gloss/05_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step -3" ></td><td><img src="img/gloss/05_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step -2" ></td><td><img src="img/gloss/05_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step -1" ></td><td><img src="img/gloss/05_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step 0" ></td><td><img src="img/gloss/05_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step +1" ></td><td><img src="img/gloss/05_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step +2" ></td><td><img src="img/gloss/05_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step +3" ></td><td><img src="img/gloss/05_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 5, step +4" ></td></tr>
+            <tr><th scope="row">6</th><td><img src="img/gloss/06_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step -4" ></td><td><img src="img/gloss/06_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step -3" ></td><td><img src="img/gloss/06_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step -2" ></td><td><img src="img/gloss/06_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step -1" ></td><td><img src="img/gloss/06_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step 0" ></td><td><img src="img/gloss/06_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step +1" ></td><td><img src="img/gloss/06_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step +2" ></td><td><img src="img/gloss/06_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step +3" ></td><td><img src="img/gloss/06_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 6, step +4" ></td></tr>
+            <tr><th scope="row">7</th><td><img src="img/gloss/07_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step -4" ></td><td><img src="img/gloss/07_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step -3" ></td><td><img src="img/gloss/07_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step -2" ></td><td><img src="img/gloss/07_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step -1" ></td><td><img src="img/gloss/07_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step 0" ></td><td><img src="img/gloss/07_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step +1" ></td><td><img src="img/gloss/07_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step +2" ></td><td><img src="img/gloss/07_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step +3" ></td><td><img src="img/gloss/07_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 7, step +4" ></td></tr>
+            <tr><th scope="row">8</th><td><img src="img/gloss/08_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step -4" ></td><td><img src="img/gloss/08_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step -3" ></td><td><img src="img/gloss/08_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step -2" ></td><td><img src="img/gloss/08_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step -1" ></td><td><img src="img/gloss/08_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step 0" ></td><td><img src="img/gloss/08_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step +1" ></td><td><img src="img/gloss/08_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step +2" ></td><td><img src="img/gloss/08_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step +3" ></td><td><img src="img/gloss/08_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 8, step +4" ></td></tr>
+            <tr><th scope="row">9</th><td><img src="img/gloss/09_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step -4" ></td><td><img src="img/gloss/09_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step -3" ></td><td><img src="img/gloss/09_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step -2" ></td><td><img src="img/gloss/09_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step -1" ></td><td><img src="img/gloss/09_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step 0" ></td><td><img src="img/gloss/09_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step +1" ></td><td><img src="img/gloss/09_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step +2" ></td><td><img src="img/gloss/09_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step +3" ></td><td><img src="img/gloss/09_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 9, step +4" ></td></tr>
+            <tr><th scope="row">10</th><td><img src="img/gloss/10_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step -4" ></td><td><img src="img/gloss/10_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step -3" ></td><td><img src="img/gloss/10_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step -2" ></td><td><img src="img/gloss/10_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step -1" ></td><td><img src="img/gloss/10_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step 0" ></td><td><img src="img/gloss/10_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step +1" ></td><td><img src="img/gloss/10_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step +2" ></td><td><img src="img/gloss/10_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step +3" ></td><td><img src="img/gloss/10_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Glossiness example 10, step +4" ></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </details>
+    </section>
+
+    <section id="rough" class="wrap attr" data-attr="rough" data-name="Roughness" data-lo="Smooth" data-hi="Rough" aria-labelledby="rough-title">
+      <h2 id="rough-title">Roughness</h2>
+      <p class="note">Visible fine-scale surface irregularity increases or decreases.</p>
+      <div class="slider-row">
+        <label class="sr-only" for="rough-slider">Roughness edit level, from Smooth (−4) to Rough (+4)</label>
+        <span class="end" aria-hidden="true">Smooth</span>
+        <input type="range" id="rough-slider" min="-4" max="4" step="1" value="0" aria-valuetext="0, unedited">
+        <span class="end" aria-hidden="true">Rough</span>
+        <output for="rough-slider" class="level" aria-hidden="true">0</output>
+        <button type="button" class="play" aria-pressed="false">Play</button>
+      </div>
+      <ul class="cards">
+          <li><img src="img/rough/01_0.webp" data-n="01" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, unedited reconstruction"></li>
+          <li><img src="img/rough/02_0.webp" data-n="02" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, unedited reconstruction"></li>
+          <li><img src="img/rough/03_0.webp" data-n="03" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, unedited reconstruction"></li>
+          <li><img src="img/rough/04_0.webp" data-n="04" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, unedited reconstruction"></li>
+          <li><img src="img/rough/05_0.webp" data-n="05" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, unedited reconstruction"></li>
+          <li><img src="img/rough/06_0.webp" data-n="06" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, unedited reconstruction"></li>
+          <li><img src="img/rough/07_0.webp" data-n="07" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, unedited reconstruction"></li>
+          <li><img src="img/rough/08_0.webp" data-n="08" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, unedited reconstruction"></li>
+          <li><img src="img/rough/09_0.webp" data-n="09" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, unedited reconstruction"></li>
+          <li><img src="img/rough/10_0.webp" data-n="10" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, unedited reconstruction"></li>
+      </ul>
+      <details>
+        <summary>Show all nine steps for every example</summary>
+        <div class="strip-wrap">
+        <table class="strips">
+          <caption class="sr-only">Roughness editing trajectories, from −4 (Smooth) to +4 (Rough); 0 is the unedited reconstruction</caption>
+          <thead><tr><td></td><th scope="col">-4</th><th scope="col">-3</th><th scope="col">-2</th><th scope="col">-1</th><th scope="col">0</th><th scope="col">+1</th><th scope="col">+2</th><th scope="col">+3</th><th scope="col">+4</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1</th><td><img src="img/rough/01_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step -4" ></td><td><img src="img/rough/01_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step -3" ></td><td><img src="img/rough/01_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step -2" ></td><td><img src="img/rough/01_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step -1" ></td><td><img src="img/rough/01_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step 0" ></td><td><img src="img/rough/01_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step +1" ></td><td><img src="img/rough/01_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step +2" ></td><td><img src="img/rough/01_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step +3" ></td><td><img src="img/rough/01_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 1, step +4" ></td></tr>
+            <tr><th scope="row">2</th><td><img src="img/rough/02_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step -4" ></td><td><img src="img/rough/02_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step -3" ></td><td><img src="img/rough/02_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step -2" ></td><td><img src="img/rough/02_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step -1" ></td><td><img src="img/rough/02_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step 0" ></td><td><img src="img/rough/02_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step +1" ></td><td><img src="img/rough/02_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step +2" ></td><td><img src="img/rough/02_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step +3" ></td><td><img src="img/rough/02_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 2, step +4" ></td></tr>
+            <tr><th scope="row">3</th><td><img src="img/rough/03_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step -4" ></td><td><img src="img/rough/03_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step -3" ></td><td><img src="img/rough/03_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step -2" ></td><td><img src="img/rough/03_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step -1" ></td><td><img src="img/rough/03_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step 0" ></td><td><img src="img/rough/03_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step +1" ></td><td><img src="img/rough/03_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step +2" ></td><td><img src="img/rough/03_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step +3" ></td><td><img src="img/rough/03_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 3, step +4" ></td></tr>
+            <tr><th scope="row">4</th><td><img src="img/rough/04_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step -4" ></td><td><img src="img/rough/04_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step -3" ></td><td><img src="img/rough/04_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step -2" ></td><td><img src="img/rough/04_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step -1" ></td><td><img src="img/rough/04_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step 0" ></td><td><img src="img/rough/04_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step +1" ></td><td><img src="img/rough/04_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step +2" ></td><td><img src="img/rough/04_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step +3" ></td><td><img src="img/rough/04_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 4, step +4" ></td></tr>
+            <tr><th scope="row">5</th><td><img src="img/rough/05_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step -4" ></td><td><img src="img/rough/05_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step -3" ></td><td><img src="img/rough/05_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step -2" ></td><td><img src="img/rough/05_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step -1" ></td><td><img src="img/rough/05_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step 0" ></td><td><img src="img/rough/05_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step +1" ></td><td><img src="img/rough/05_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step +2" ></td><td><img src="img/rough/05_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step +3" ></td><td><img src="img/rough/05_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 5, step +4" ></td></tr>
+            <tr><th scope="row">6</th><td><img src="img/rough/06_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step -4" ></td><td><img src="img/rough/06_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step -3" ></td><td><img src="img/rough/06_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step -2" ></td><td><img src="img/rough/06_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step -1" ></td><td><img src="img/rough/06_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step 0" ></td><td><img src="img/rough/06_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step +1" ></td><td><img src="img/rough/06_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step +2" ></td><td><img src="img/rough/06_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step +3" ></td><td><img src="img/rough/06_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 6, step +4" ></td></tr>
+            <tr><th scope="row">7</th><td><img src="img/rough/07_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step -4" ></td><td><img src="img/rough/07_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step -3" ></td><td><img src="img/rough/07_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step -2" ></td><td><img src="img/rough/07_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step -1" ></td><td><img src="img/rough/07_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step 0" ></td><td><img src="img/rough/07_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step +1" ></td><td><img src="img/rough/07_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step +2" ></td><td><img src="img/rough/07_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step +3" ></td><td><img src="img/rough/07_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 7, step +4" ></td></tr>
+            <tr><th scope="row">8</th><td><img src="img/rough/08_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step -4" ></td><td><img src="img/rough/08_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step -3" ></td><td><img src="img/rough/08_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step -2" ></td><td><img src="img/rough/08_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step -1" ></td><td><img src="img/rough/08_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step 0" ></td><td><img src="img/rough/08_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step +1" ></td><td><img src="img/rough/08_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step +2" ></td><td><img src="img/rough/08_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step +3" ></td><td><img src="img/rough/08_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 8, step +4" ></td></tr>
+            <tr><th scope="row">9</th><td><img src="img/rough/09_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step -4" ></td><td><img src="img/rough/09_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step -3" ></td><td><img src="img/rough/09_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step -2" ></td><td><img src="img/rough/09_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step -1" ></td><td><img src="img/rough/09_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step 0" ></td><td><img src="img/rough/09_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step +1" ></td><td><img src="img/rough/09_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step +2" ></td><td><img src="img/rough/09_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step +3" ></td><td><img src="img/rough/09_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 9, step +4" ></td></tr>
+            <tr><th scope="row">10</th><td><img src="img/rough/10_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step -4" ></td><td><img src="img/rough/10_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step -3" ></td><td><img src="img/rough/10_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step -2" ></td><td><img src="img/rough/10_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step -1" ></td><td><img src="img/rough/10_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step 0" ></td><td><img src="img/rough/10_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step +1" ></td><td><img src="img/rough/10_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step +2" ></td><td><img src="img/rough/10_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step +3" ></td><td><img src="img/rough/10_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Roughness example 10, step +4" ></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </details>
+    </section>
+
+    <section id="relief" class="wrap attr" data-attr="relief" data-name="Surface relief" data-lo="Flat" data-hi="Deep" aria-labelledby="relief-title">
+      <h2 id="relief-title">Surface relief</h2>
+      <p class="note">The apparent prominence of protruding and recessed regions changes.</p>
+      <div class="slider-row">
+        <label class="sr-only" for="relief-slider">Surface relief edit level, from Flat (−4) to Deep (+4)</label>
+        <span class="end" aria-hidden="true">Flat</span>
+        <input type="range" id="relief-slider" min="-4" max="4" step="1" value="0" aria-valuetext="0, unedited">
+        <span class="end" aria-hidden="true">Deep</span>
+        <output for="relief-slider" class="level" aria-hidden="true">0</output>
+        <button type="button" class="play" aria-pressed="false">Play</button>
+      </div>
+      <ul class="cards">
+          <li><img src="img/relief/01_0.webp" data-n="01" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, unedited reconstruction"></li>
+          <li><img src="img/relief/02_0.webp" data-n="02" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, unedited reconstruction"></li>
+          <li><img src="img/relief/03_0.webp" data-n="03" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, unedited reconstruction"></li>
+          <li><img src="img/relief/04_0.webp" data-n="04" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, unedited reconstruction"></li>
+          <li><img src="img/relief/05_0.webp" data-n="05" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, unedited reconstruction"></li>
+          <li><img src="img/relief/06_0.webp" data-n="06" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, unedited reconstruction"></li>
+          <li><img src="img/relief/07_0.webp" data-n="07" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, unedited reconstruction"></li>
+          <li><img src="img/relief/08_0.webp" data-n="08" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, unedited reconstruction"></li>
+          <li><img src="img/relief/09_0.webp" data-n="09" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, unedited reconstruction"></li>
+          <li><img src="img/relief/10_0.webp" data-n="10" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, unedited reconstruction"></li>
+      </ul>
+      <details>
+        <summary>Show all nine steps for every example</summary>
+        <div class="strip-wrap">
+        <table class="strips">
+          <caption class="sr-only">Surface relief editing trajectories, from −4 (Flat) to +4 (Deep); 0 is the unedited reconstruction</caption>
+          <thead><tr><td></td><th scope="col">-4</th><th scope="col">-3</th><th scope="col">-2</th><th scope="col">-1</th><th scope="col">0</th><th scope="col">+1</th><th scope="col">+2</th><th scope="col">+3</th><th scope="col">+4</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1</th><td><img src="img/relief/01_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step -4" ></td><td><img src="img/relief/01_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step -3" ></td><td><img src="img/relief/01_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step -2" ></td><td><img src="img/relief/01_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step -1" ></td><td><img src="img/relief/01_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step 0" ></td><td><img src="img/relief/01_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step +1" ></td><td><img src="img/relief/01_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step +2" ></td><td><img src="img/relief/01_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step +3" ></td><td><img src="img/relief/01_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 1, step +4" ></td></tr>
+            <tr><th scope="row">2</th><td><img src="img/relief/02_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step -4" ></td><td><img src="img/relief/02_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step -3" ></td><td><img src="img/relief/02_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step -2" ></td><td><img src="img/relief/02_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step -1" ></td><td><img src="img/relief/02_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step 0" ></td><td><img src="img/relief/02_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step +1" ></td><td><img src="img/relief/02_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step +2" ></td><td><img src="img/relief/02_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step +3" ></td><td><img src="img/relief/02_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 2, step +4" ></td></tr>
+            <tr><th scope="row">3</th><td><img src="img/relief/03_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step -4" ></td><td><img src="img/relief/03_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step -3" ></td><td><img src="img/relief/03_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step -2" ></td><td><img src="img/relief/03_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step -1" ></td><td><img src="img/relief/03_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step 0" ></td><td><img src="img/relief/03_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step +1" ></td><td><img src="img/relief/03_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step +2" ></td><td><img src="img/relief/03_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step +3" ></td><td><img src="img/relief/03_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 3, step +4" ></td></tr>
+            <tr><th scope="row">4</th><td><img src="img/relief/04_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step -4" ></td><td><img src="img/relief/04_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step -3" ></td><td><img src="img/relief/04_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step -2" ></td><td><img src="img/relief/04_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step -1" ></td><td><img src="img/relief/04_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step 0" ></td><td><img src="img/relief/04_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step +1" ></td><td><img src="img/relief/04_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step +2" ></td><td><img src="img/relief/04_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step +3" ></td><td><img src="img/relief/04_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 4, step +4" ></td></tr>
+            <tr><th scope="row">5</th><td><img src="img/relief/05_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step -4" ></td><td><img src="img/relief/05_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step -3" ></td><td><img src="img/relief/05_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step -2" ></td><td><img src="img/relief/05_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step -1" ></td><td><img src="img/relief/05_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step 0" ></td><td><img src="img/relief/05_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step +1" ></td><td><img src="img/relief/05_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step +2" ></td><td><img src="img/relief/05_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step +3" ></td><td><img src="img/relief/05_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 5, step +4" ></td></tr>
+            <tr><th scope="row">6</th><td><img src="img/relief/06_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step -4" ></td><td><img src="img/relief/06_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step -3" ></td><td><img src="img/relief/06_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step -2" ></td><td><img src="img/relief/06_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step -1" ></td><td><img src="img/relief/06_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step 0" ></td><td><img src="img/relief/06_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step +1" ></td><td><img src="img/relief/06_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step +2" ></td><td><img src="img/relief/06_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step +3" ></td><td><img src="img/relief/06_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 6, step +4" ></td></tr>
+            <tr><th scope="row">7</th><td><img src="img/relief/07_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step -4" ></td><td><img src="img/relief/07_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step -3" ></td><td><img src="img/relief/07_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step -2" ></td><td><img src="img/relief/07_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step -1" ></td><td><img src="img/relief/07_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step 0" ></td><td><img src="img/relief/07_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step +1" ></td><td><img src="img/relief/07_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step +2" ></td><td><img src="img/relief/07_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step +3" ></td><td><img src="img/relief/07_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 7, step +4" ></td></tr>
+            <tr><th scope="row">8</th><td><img src="img/relief/08_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step -4" ></td><td><img src="img/relief/08_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step -3" ></td><td><img src="img/relief/08_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step -2" ></td><td><img src="img/relief/08_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step -1" ></td><td><img src="img/relief/08_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step 0" ></td><td><img src="img/relief/08_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step +1" ></td><td><img src="img/relief/08_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step +2" ></td><td><img src="img/relief/08_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step +3" ></td><td><img src="img/relief/08_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 8, step +4" ></td></tr>
+            <tr><th scope="row">9</th><td><img src="img/relief/09_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step -4" ></td><td><img src="img/relief/09_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step -3" ></td><td><img src="img/relief/09_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step -2" ></td><td><img src="img/relief/09_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step -1" ></td><td><img src="img/relief/09_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step 0" ></td><td><img src="img/relief/09_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step +1" ></td><td><img src="img/relief/09_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step +2" ></td><td><img src="img/relief/09_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step +3" ></td><td><img src="img/relief/09_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 9, step +4" ></td></tr>
+            <tr><th scope="row">10</th><td><img src="img/relief/10_m4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step -4" ></td><td><img src="img/relief/10_m3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step -3" ></td><td><img src="img/relief/10_m2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step -2" ></td><td><img src="img/relief/10_m1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step -1" ></td><td><img src="img/relief/10_0.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step 0" ></td><td><img src="img/relief/10_p1.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step +1" ></td><td><img src="img/relief/10_p2.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step +2" ></td><td><img src="img/relief/10_p3.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step +3" ></td><td><img src="img/relief/10_p4.webp" width="256" height="256" loading="lazy" decoding="async" alt="Surface relief example 10, step +4" ></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year">2026</span> Zhiwei Xu · <a href="/research/">Research</a> · <a href="/">Personal blog</a></p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function stepName(k) { return k === 0 ? '0' : (k > 0 ? 'p' + k : 'm' + (-k)); }
+    function sign(k) { return k > 0 ? '+' + k : String(k); }
+
+    document.querySelectorAll('section.attr').forEach(function (sec) {
+      var key = sec.dataset.attr, name = sec.dataset.name, lo = sec.dataset.lo, hi = sec.dataset.hi;
+      var slider = sec.querySelector('input[type=range]');
+      var out = sec.querySelector('output');
+      var btn = sec.querySelector('.play');
+      var imgs = sec.querySelectorAll('.cards img');
+      var timer = null, dir = 1;
+
+      // warm the cache once the section is near the viewport
+      var warmed = false;
+      function warm() {
+        if (warmed) return; warmed = true;
+        imgs.forEach(function (im) {
+          for (var k = -4; k <= 4; k++) { var i = new Image(); i.src = 'img/' + key + '/' + im.dataset.n + '_' + stepName(k) + '.webp'; }
+        });
+      }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { warm(); io.disconnect(); } }, { rootMargin: '300px' });
+        io.observe(sec);
+      }
+
+      function render() {
+        var k = parseInt(slider.value, 10);
+        var desc = k === 0 ? 'unedited' : (k < 0 ? 'toward ' + lo.toLowerCase() : 'toward ' + hi.toLowerCase());
+        out.textContent = sign(k);
+        slider.setAttribute('aria-valuetext', sign(k) + ', ' + desc);
+        imgs.forEach(function (im, idx) {
+          im.src = 'img/' + key + '/' + im.dataset.n + '_' + stepName(k) + '.webp';
+          im.alt = name + ' example ' + (idx + 1) + ', ' + (k === 0 ? 'unedited reconstruction' : 'edit level ' + sign(k) + ' (' + desc + ')');
+        });
+      }
+      slider.addEventListener('input', function () { warm(); render(); });
+
+      function stop() { clearInterval(timer); timer = null; btn.textContent = 'Play'; btn.setAttribute('aria-pressed', 'false'); }
+      btn.addEventListener('click', function () {
+        if (timer) { stop(); return; }
+        warm();
+        btn.textContent = 'Pause'; btn.setAttribute('aria-pressed', 'true');
+        timer = setInterval(function () {
+          var v = parseInt(slider.value, 10);
+          if (v >= 4) dir = -1; else if (v <= -4) dir = 1;
+          slider.value = v + dir; render();
+        }, 450);
+      });
+      slider.addEventListener('pointerdown', stop);
+      slider.addEventListener('keydown', stop);
+    });
+  })();
+  </script>
+</body>
+</html>

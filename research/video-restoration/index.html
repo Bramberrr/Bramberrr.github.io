@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compressed Video Texture Restoration — Zhiwei Xu</title>
+  <meta name="description" content="Project page for “Decoupling Artifact Removal and Texture Recovery in Compressed Video”: visual comparisons on 4K HEVC-compressed video.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .paper-head { padding-top: 3rem; padding-bottom: 1.5rem; text-align: center; }
+    .paper-head h1 { max-width: 46rem; margin: .25rem auto .9rem; }
+    .authors { margin: 0 0 .2rem; font-size: 1.1rem; }
+    .affil { margin: 0 0 .4rem; color: var(--muted); font-size: .95rem; }
+    .venue { margin: 0 0 1.25rem; color: var(--muted); font-size: .95rem; }
+    .paper-head .links { justify-content: center; }
+    .soon {
+      display: inline-block; padding: .4rem .9rem;
+      border: 1px dashed var(--muted); border-radius: 999px;
+      color: var(--muted); font-weight: 600; font-size: .95rem;
+    }
+    .note { color: var(--muted); font-size: .95rem; }
+
+    /* controls */
+    .controls { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin: 0 0 1rem; }
+    .controls fieldset { border: 0; margin: 0; padding: 0; }
+    .controls legend { padding: 0; margin-bottom: .35rem; font-weight: 600; font-size: .95rem; }
+    .seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--accent); border-radius: 8px; overflow: hidden; }
+    .seg label { position: relative; }
+    .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+    .seg span { display: block; padding: .4rem .8rem; font-size: .92rem; border-left: 1px solid var(--accent); }
+    .seg label:first-child span { border-left: 0; }
+    .seg input:checked + span { background: var(--accent); color: var(--bg); }
+    .seg input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: -3px; }
+    .seg input:disabled + span { color: var(--muted); opacity: .5; cursor: not-allowed; }
+
+    /* galleries */
+    .gallery { border-collapse: separate; border-spacing: 6px; table-layout: fixed; width: calc(100% + 12px); margin: 0 -6px 1.5rem; }
+    .gallery thead th {
+      position: sticky; top: 3.4rem; z-index: 2;
+      padding: .45rem .25rem; background: var(--bg);
+      border-bottom: 2px solid var(--accent);
+      font-size: .92rem; text-align: center; line-height: 1.3;
+    }
+    .gallery thead th.ours { color: var(--accent); }
+    .gallery thead .rh { width: 6.5rem; border-bottom-color: transparent; }
+    .gallery tbody th { text-align: left; font-size: .88rem; font-weight: 600; vertical-align: middle; }
+    .gallery tbody th .xy { display: block; color: var(--muted); font-weight: 400; font-variant-numeric: tabular-nums; }
+    .gallery td { padding: 0; }
+    .cell { display: block; width: 100%; padding: 0; border: 0; background: var(--rule); border-radius: 4px; cursor: zoom-in; }
+    .cell img { display: block; width: 100%; height: auto; border-radius: 4px; }
+    .na { display: grid; place-items: center; aspect-ratio: 1; border: 1px dashed var(--rule); border-radius: 4px; color: var(--muted); font-size: .85rem; text-align: center; }
+
+    /* viewer */
+    dialog.viewer { max-width: min(96vw, 760px); width: 100%; padding: 1rem; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); color: var(--text); }
+    dialog.viewer::backdrop { background: rgb(0 0 0 / .7); }
+    .viewer img { display: block; width: 100%; height: auto; image-rendering: pixelated; border-radius: 4px; }
+    .viewer-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .75rem; }
+    .viewer-title { margin: 0; font-weight: 600; }
+    .viewer-sub { margin: 0; color: var(--muted); font-size: .9rem; }
+    .viewer button.ctl { padding: .4rem .8rem; border: 1px solid var(--accent); border-radius: 6px; background: transparent; color: var(--accent); font: inherit; font-size: .92rem; cursor: pointer; }
+    .viewer button.ctl:hover { background: var(--accent-soft); }
+    .viewer-btns { display: flex; gap: .4rem; }
+
+    .table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+    .metrics { width: 100%; min-width: 40rem; border-collapse: collapse; font-size: .93rem; font-variant-numeric: tabular-nums; }
+    .metrics th, .metrics td { padding: .45rem .6rem; text-align: right; border-bottom: 1px solid var(--rule); }
+    .metrics thead th { border-bottom: 2px solid var(--text); white-space: nowrap; }
+    .metrics thead th:nth-child(2), .metrics tbody th[scope=row] { text-align: left; }
+    .metrics tbody th[scope=rowgroup] { text-align: center; vertical-align: middle; border-right: 1px solid var(--rule); }
+    .metrics tbody th { font-weight: 400; white-space: nowrap; }
+    .metrics tr.ours th[scope=row] { color: var(--accent); font-weight: 600; }
+    .metrics tr.ours td, .metrics tr.ours th { border-bottom: 2px solid var(--rule); }
+
+    @media (max-width: 40rem) {
+      .gallery { border-spacing: 3px; width: calc(100% + 6px); margin: 0 -3px 1.5rem; }
+      .gallery thead th { top: 0; font-size: .72rem; padding: .3rem .1rem; }
+      .gallery thead .rh { width: 3.4rem; }
+      .gallery tbody th { font-size: .7rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/research/">Zhiwei Xu</a>
+      <nav aria-label="Page">
+        <ul class="nav-list">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#quantitative">Results</a></li>
+          <li><a href="#results">Visuals</a></li>
+          <li><a href="#objectives">Objectives</a></li>
+          <li><a href="#ablation">Ablation</a></li>
+          <li><a href="/research/">Research <span aria-hidden="true">↩</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="paper-head wrap" aria-labelledby="paper-title">
+      <p class="eyebrow">Video restoration · HEVC</p>
+      <h1 id="paper-title">Decoupling Artifact Removal and Texture Recovery in Compressed Video</h1>
+      <p class="authors"><strong>Zhiwei Xu</strong>, <a href="https://www.hajim.rochester.edu/ece/people/faculty/sharma_gaurav/index.html">Gaurav Sharma</a>, <a href="https://www.eecs.northwestern.edu/~pappas/">Thrasyvoulos N. Pappas</a></p>
+      <p class="affil">Northwestern University · University of Rochester</p>
+      <p class="venue">In preparation for <cite>Signal Processing: Image Communication</cite>, special issue on Extreme Super-Resolution</p>
+      <ul class="links" aria-label="Paper links">
+        <li><span class="soon">Preprint — coming soon</span></li>
+        <li><span class="soon">Code — coming soon</span></li>
+        <li><a href="/research/">Back to research</a></li>
+      </ul>
+      <p class="note">The official preprint will be released through the special issue.</p>
+    </section>
+
+    <section id="overview" class="wrap" aria-labelledby="overview-title">
+      <h2 id="overview-title">Overview</h2>
+      <p>
+        HEVC compression removes fine textures and adds blocking, ringing and mosquito noise.
+        Restoration networks suppress these artifacts well, but they tend to oversmooth texture-rich regions.
+        Adding a perceptual texture loss directly does not fix this, because textures and compression
+        artifacts share similar high-frequency characteristics.
+      </p>
+      <p>
+        We decouple the two jobs. A conventional restoration backbone first removes the artifacts
+        (stage 1). A lightweight refinement network then recovers perceptually relevant texture, using the
+        compressed video as auxiliary guidance while constraining how far it moves from the stage-1
+        reconstruction (stage 2). We test it with three backbones (ShiftNet, BasicVSR++ and STDF) on
+        10 held-out 4K videos at HEVC CRF 32, 36 and 40.
+      </p>
+    </section>
+
+    <section id="quantitative" class="wrap" aria-labelledby="quant-title">
+      <h2 id="quant-title">Quantitative results</h2>
+      <p class="note">Stage-wise performance on the 10-video 4K test set with ShiftNet-S. Stage 1 improves conservative
+        reconstruction fidelity (PSNR); stage 2 restores perceptual texture under bounded refinement.
+        LPIPS uses the VGG backbone on full-resolution 4K frames. Best value per CRF in <strong>bold</strong>.</p>
+      <div class="table-wrap">
+      <table class="metrics">
+        <caption class="sr-only">Stage-wise restoration performance at HEVC CRF 32, 36 and 40</caption>
+        <thead>
+          <tr><th scope="col">CRF</th><th scope="col">Stage</th>
+            <th scope="col">VMAF <span aria-label="higher is better">↑</span></th>
+            <th scope="col">ST-GREED <span aria-label="lower is better">↓</span></th>
+            <th scope="col">PSNR <span aria-label="higher is better">↑</span></th>
+            <th scope="col">LPIPS <span aria-label="lower is better">↓</span></th>
+            <th scope="col">DISTS <span aria-label="lower is better">↓</span></th>
+            <th scope="col">STSIM <span aria-label="lower is better">↓</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="rowgroup" rowspan="3">32</th><th scope="row">HEVC input</th><td>79.545</td><td>14.243</td><td>36.653</td><td>0.2394</td><td>0.0688</td><td>2.624</td></tr>
+          <tr><th scope="row">ShiftNet-S (stage 1)</th><td>81.799</td><td>13.883</td><td><strong>37.189</strong></td><td>0.2479</td><td>0.0990</td><td>3.598</td></tr>
+          <tr class="ours"><th scope="row">+ Ours (stage 2)</th><td><strong>82.643</strong></td><td><strong>13.838</strong></td><td>36.225</td><td><strong>0.2377</strong></td><td><strong>0.0588</strong></td><td><strong>2.391</strong></td></tr>
+          <tr><th scope="rowgroup" rowspan="3">36</th><th scope="row">HEVC input</th><td>68.272</td><td>19.483</td><td>34.620</td><td>0.2989</td><td>0.0943</td><td>3.200</td></tr>
+          <tr><th scope="row">ShiftNet-S (stage 1)</th><td>71.045</td><td>18.994</td><td><strong>35.200</strong></td><td>0.2970</td><td>0.1247</td><td>4.187</td></tr>
+          <tr class="ours"><th scope="row">+ Ours (stage 2)</th><td><strong>72.177</strong></td><td><strong>18.504</strong></td><td>34.597</td><td><strong>0.2861</strong></td><td><strong>0.0771</strong></td><td><strong>2.815</strong></td></tr>
+          <tr><th scope="rowgroup" rowspan="3">40</th><th scope="row">HEVC input</th><td>53.984</td><td>26.711</td><td>32.616</td><td>0.3637</td><td>0.1287</td><td>3.922</td></tr>
+          <tr><th scope="row">ShiftNet-S (stage 1)</th><td>57.218</td><td>26.061</td><td><strong>33.179</strong></td><td>0.3520</td><td>0.1570</td><td>4.920</td></tr>
+          <tr class="ours"><th scope="row">+ Ours (stage 2)</th><td><strong>58.423</strong></td><td><strong>25.416</strong></td><td>32.804</td><td><strong>0.3428</strong></td><td><strong>0.1046</strong></td><td><strong>3.445</strong></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="results" class="wrap" aria-labelledby="results-title">
+      <h2 id="results-title">Visual results</h2>
+      <p class="note">Native-resolution 346 × 346 crops from frame 2 of each 4K test video; the numbers are the crop's position in the frame.
+        Select an image to enlarge it, then use the arrow keys to flip between methods at the same location.</p>
+
+      <div class="controls">
+        <fieldset>
+          <legend>Backbone (stage 1)</legend>
+          <div class="seg">
+            <label><input type="radio" name="bb" value="shiftnet" checked><span>ShiftNet-S</span></label>
+            <label><input type="radio" name="bb" value="basicvsrpp"><span>BasicVSR++</span></label>
+            <label><input type="radio" name="bb" value="stdf"><span>STDF</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>HEVC compression (CRF)</legend>
+          <div class="seg">
+            <label><input type="radio" name="crf" value="32"><span>32</span></label>
+            <label><input type="radio" name="crf" value="36" checked><span>36</span></label>
+            <label><input type="radio" name="crf" value="40"><span>40</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <p class="note" id="ctl-note" aria-live="polite">Showing ShiftNet-S at CRF 36.</p>
+
+      <table class="gallery" id="main-gallery">
+        <caption class="sr-only">Ground truth, HEVC-compressed input, stage-1 backbone output and our refined output for each crop</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="rh"><span class="sr-only">Crop</span></th>
+            <th scope="col">Ground truth</th>
+            <th scope="col" id="h-lq">HEVC (CRF 36)</th>
+            <th scope="col" id="h-s1">ShiftNet-S</th>
+            <th scope="col" class="ours" id="h-s2">Ours</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr data-crop="Scarf-2322-692" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_S_L1STSIM 36-y0_S_STSIM 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(2322, 692)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Scarf-2322-692_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Scarf-2322-692_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Scarf-2322-692_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Scarf-2322-692_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="Scarf-1393-1366" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_S_L1STSIM 36-y0_S_STSIM 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(1393, 1366)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Scarf-1393-1366_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Scarf-1393-1366_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Scarf-1393-1366_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Scarf-1393-1366_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="BricksBushes-2719-1239" data-avail="32-lq 32-y0 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-y1 gt">
+          <th scope="row"><span class="vid">Bricks &amp; Bushes</span><span class="xy">(2719, 1239)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/BricksBushes-2719-1239_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2719, 1239), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/BricksBushes-2719-1239_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2719, 1239), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/BricksBushes-2719-1239_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2719, 1239), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/BricksBushes-2719-1239_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2719, 1239), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="MoroccanCeramics-2617-1335" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Moroccan Ceramics</span><span class="xy">(2617, 1335)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/MoroccanCeramics-2617-1335_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/MoroccanCeramics-2617-1335_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/MoroccanCeramics-2617-1335_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/MoroccanCeramics-2617-1335_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="Lake-141-443" data-avail="32-lq 32-y0 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Lake</span><span class="xy">(141, 443)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Lake-141-443_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Lake crop at (141, 443), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Lake-141-443_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Lake crop at (141, 443), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Lake-141-443_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Lake crop at (141, 443), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Lake-141-443_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Lake crop at (141, 443), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="Smithy-2690-1265" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Smithy</span><span class="xy">(2690, 1265)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Smithy-2690-1265_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Smithy-2690-1265_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Smithy-2690-1265_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Smithy-2690-1265_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="BricksBushes-1226-609" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Bricks &amp; Bushes</span><span class="xy">(1226, 609)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/BricksBushes-1226-609_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/BricksBushes-1226-609_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/BricksBushes-1226-609_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/BricksBushes-1226-609_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="BricksBushes-2113-697" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Bricks &amp; Bushes</span><span class="xy">(2113, 697)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/BricksBushes-2113-697_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2113, 697), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/BricksBushes-2113-697_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2113, 697), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/BricksBushes-2113-697_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2113, 697), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/BricksBushes-2113-697_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (2113, 697), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="BuildingRoof-12-1050" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Building Roof</span><span class="xy">(12, 1050)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/BuildingRoof-12-1050_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Building Roof crop at (12, 1050), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/BuildingRoof-12-1050_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Building Roof crop at (12, 1050), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/BuildingRoof-12-1050_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Building Roof crop at (12, 1050), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/BuildingRoof-12-1050_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Building Roof crop at (12, 1050), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="PedestriansSeoul-2347-981" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Pedestrians</span><span class="xy">(2347, 981)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/PedestriansSeoul-2347-981_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Pedestrians crop at (2347, 981), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/PedestriansSeoul-2347-981_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Pedestrians crop at (2347, 981), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/PedestriansSeoul-2347-981_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Pedestrians crop at (2347, 981), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/PedestriansSeoul-2347-981_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Pedestrians crop at (2347, 981), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="Scarf-2422-1228" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(2422, 1228)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Scarf-2422-1228_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2422, 1228), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Scarf-2422-1228_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2422, 1228), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Scarf-2422-1228_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2422, 1228), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Scarf-2422-1228_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2422, 1228), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="Scarf-1766-1701" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(1766, 1701)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Scarf-1766-1701_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1766, 1701), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Scarf-1766-1701_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1766, 1701), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Scarf-1766-1701_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1766, 1701), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Scarf-1766-1701_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1766, 1701), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        <tr data-crop="Smithy-2231-776" data-avail="32-lq 32-y0 32-y1 36-lq 36-y0 36-y0_basicvsrpp 36-y0_stdf 36-y1 36-y1_basicvsrpp 36-y1_dists 36-y1_lpips 36-y1_stdf 40-lq 40-y0 40-y1 gt">
+          <th scope="row"><span class="vid">Smithy</span><span class="xy">(2231, 776)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Smithy-2231-776_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2231, 776), Ground truth"></button></td>
+          <td data-col="lq"><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Smithy-2231-776_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2231, 776), HEVC, CRF 36"></button></td>
+          <td data-col="s1"><button type="button" class="cell" data-label="ShiftNet-S (stage 1)"><img src="img/Smithy-2231-776_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2231, 776), ShiftNet-S (stage 1)"></button></td>
+          <td data-col="s2"><button type="button" class="cell" data-label="Ours: ShiftNet-S + refiner"><img src="img/Smithy-2231-776_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2231, 776), Ours: ShiftNet-S + refiner"></button></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="objectives" class="wrap" aria-labelledby="objectives-title">
+      <h2 id="objectives-title">Stage-2 perceptual objective</h2>
+      <p class="note">The same refiner trained with different perceptual losses, on top of the ShiftNet-S output at CRF 36.</p>
+      <table class="gallery">
+        <caption class="sr-only">Stage-1 output and refinements trained with LPIPS, DISTS and STSIM</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="rh"><span class="sr-only">Crop</span></th>
+            <th scope="col">Stage 1</th>
+            <th scope="col">LPIPS</th>
+            <th scope="col">DISTS</th>
+            <th scope="col" class="ours">STSIM (ours)</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(2322, 692)</span></th>
+          <td><button type="button" class="cell" data-label="Stage 1 (ShiftNet-S)"><img src="img/Scarf-2322-692_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Stage 1 (ShiftNet-S)"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with LPIPS"><img src="img/Scarf-2322-692_36-y1_lpips.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Refined with LPIPS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with DISTS"><img src="img/Scarf-2322-692_36-y1_dists.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Refined with DISTS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with STSIM (ours)"><img src="img/Scarf-2322-692_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Refined with STSIM (ours)"></button></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="vid">Bricks &amp; Bushes</span><span class="xy">(1226, 609)</span></th>
+          <td><button type="button" class="cell" data-label="Stage 1 (ShiftNet-S)"><img src="img/BricksBushes-1226-609_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), Stage 1 (ShiftNet-S)"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with LPIPS"><img src="img/BricksBushes-1226-609_36-y1_lpips.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), Refined with LPIPS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with DISTS"><img src="img/BricksBushes-1226-609_36-y1_dists.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), Refined with DISTS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with STSIM (ours)"><img src="img/BricksBushes-1226-609_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Bricks &amp; Bushes crop at (1226, 609), Refined with STSIM (ours)"></button></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="vid">Moroccan Ceramics</span><span class="xy">(2617, 1335)</span></th>
+          <td><button type="button" class="cell" data-label="Stage 1 (ShiftNet-S)"><img src="img/MoroccanCeramics-2617-1335_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), Stage 1 (ShiftNet-S)"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with LPIPS"><img src="img/MoroccanCeramics-2617-1335_36-y1_lpips.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), Refined with LPIPS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with DISTS"><img src="img/MoroccanCeramics-2617-1335_36-y1_dists.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), Refined with DISTS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with STSIM (ours)"><img src="img/MoroccanCeramics-2617-1335_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Moroccan Ceramics crop at (2617, 1335), Refined with STSIM (ours)"></button></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="vid">Smithy</span><span class="xy">(2690, 1265)</span></th>
+          <td><button type="button" class="cell" data-label="Stage 1 (ShiftNet-S)"><img src="img/Smithy-2690-1265_36-y0.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), Stage 1 (ShiftNet-S)"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with LPIPS"><img src="img/Smithy-2690-1265_36-y1_lpips.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), Refined with LPIPS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with DISTS"><img src="img/Smithy-2690-1265_36-y1_dists.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), Refined with DISTS"></button></td>
+          <td><button type="button" class="cell" data-label="Refined with STSIM (ours)"><img src="img/Smithy-2690-1265_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Smithy crop at (2690, 1265), Refined with STSIM (ours)"></button></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ablation" class="wrap" aria-labelledby="ablation-title">
+      <h2 id="ablation-title">Why decouple? Direct training vs. two stages</h2>
+      <p class="note">Training the ShiftNet-S backbone directly with a perceptual texture loss (with or without L1)
+        compared with our two-stage approach: an L1-trained backbone followed by bounded STSIM refinement. Scarf, CRF 36.</p>
+      <table class="gallery">
+        <caption class="sr-only">Ground truth, HEVC input, backbone trained with L1 plus STSIM, backbone trained with STSIM only, and ours</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="rh"><span class="sr-only">Crop</span></th>
+            <th scope="col">Ground truth</th>
+            <th scope="col">HEVC</th>
+            <th scope="col">L1 + STSIM backbone</th>
+            <th scope="col">STSIM backbone</th>
+            <th scope="col" class="ours">Ours (two-stage)</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(1393, 1366)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Scarf-1393-1366_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), Ground truth"></button></td>
+          <td><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Scarf-1393-1366_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), HEVC, CRF 36"></button></td>
+          <td><button type="button" class="cell" data-label="Backbone trained with L1 + STSIM"><img src="img/Scarf-1393-1366_36-y0_S_L1STSIM.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), Backbone trained with L1 + STSIM"></button></td>
+          <td><button type="button" class="cell" data-label="Backbone trained with STSIM only"><img src="img/Scarf-1393-1366_36-y0_S_STSIM.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), Backbone trained with STSIM only"></button></td>
+          <td><button type="button" class="cell" data-label="Ours: two-stage"><img src="img/Scarf-1393-1366_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (1393, 1366), Ours: two-stage"></button></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="vid">Scarf</span><span class="xy">(2322, 692)</span></th>
+          <td><button type="button" class="cell" data-label="Ground truth"><img src="img/Scarf-2322-692_gt.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Ground truth"></button></td>
+          <td><button type="button" class="cell" data-label="HEVC, CRF 36"><img src="img/Scarf-2322-692_36-lq.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), HEVC, CRF 36"></button></td>
+          <td><button type="button" class="cell" data-label="Backbone trained with L1 + STSIM"><img src="img/Scarf-2322-692_36-y0_S_L1STSIM.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Backbone trained with L1 + STSIM"></button></td>
+          <td><button type="button" class="cell" data-label="Backbone trained with STSIM only"><img src="img/Scarf-2322-692_36-y0_S_STSIM.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Backbone trained with STSIM only"></button></td>
+          <td><button type="button" class="cell" data-label="Ours: two-stage"><img src="img/Scarf-2322-692_36-y1.webp" width="346" height="346" loading="lazy" decoding="async" alt="Scarf crop at (2322, 692), Ours: two-stage"></button></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <dialog class="viewer" id="viewer" aria-labelledby="viewer-title">
+    <img id="viewer-img" src="" alt="">
+    <div class="viewer-bar">
+      <div>
+        <p class="viewer-title" id="viewer-title"></p>
+        <p class="viewer-sub" id="viewer-sub"></p>
+      </div>
+      <div class="viewer-btns">
+        <button type="button" class="ctl" id="v-prev">← Previous</button>
+        <button type="button" class="ctl" id="v-next">Next →</button>
+        <button type="button" class="ctl" id="v-close">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year">2026</span> Zhiwei Xu · <a href="/research/">Research</a> · <a href="/">Personal blog</a></p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ----- backbone / CRF switching -----
+    var NAMES = { shiftnet: 'ShiftNet-S', basicvsrpp: 'BasicVSR++', stdf: 'STDF' };
+    var rows = document.querySelectorAll('#main-gallery tbody tr');
+    var note = document.getElementById('ctl-note');
+
+    function val(name) { return document.querySelector('input[name="' + name + '"]:checked').value; }
+
+    function setCell(td, row, key, label) {
+      var crop = row.dataset.crop;
+      var ok = row.dataset.avail.split(' ').indexOf(key) !== -1;
+      var btn = td.querySelector('.cell');
+      var na = td.querySelector('.na');
+      if (!ok) {
+        if (btn) btn.hidden = true;
+        if (!na) { na = document.createElement('div'); na.className = 'na'; td.appendChild(na); }
+        na.hidden = false;
+        na.textContent = 'Not available';
+        return;
+      }
+      if (na) na.hidden = true;
+      btn.hidden = false;
+      var img = btn.querySelector('img');
+      img.src = 'img/' + crop + '_' + key + '.webp';
+      var th = row.querySelector('th');
+      img.alt = th.querySelector('.vid').textContent + ' crop at ' + th.querySelector('.xy').textContent + ', ' + label;
+      btn.dataset.label = label;
+    }
+
+    function update() {
+      var bb = val('bb');
+      var crfInputs = document.querySelectorAll('input[name="crf"]');
+      crfInputs.forEach(function (i) {
+        i.disabled = bb !== 'shiftnet' && i.value !== '36';
+      });
+      if (bb !== 'shiftnet') document.querySelector('input[name="crf"][value="36"]').checked = true;
+      var crf = val('crf');
+      var sfx = bb === 'shiftnet' ? '' : '_' + bb;
+      var name = NAMES[bb];
+      document.getElementById('h-lq').textContent = 'HEVC (CRF ' + crf + ')';
+      document.getElementById('h-s1').textContent = name;
+      document.getElementById('h-s2').textContent = 'Ours';
+      rows.forEach(function (row) {
+        setCell(row.querySelector('[data-col="lq"]'), row, crf + '-lq', 'HEVC, CRF ' + crf);
+        setCell(row.querySelector('[data-col="s1"]'), row, crf + '-y0' + sfx, name + ' (stage 1)');
+        setCell(row.querySelector('[data-col="s2"]'), row, crf + '-y1' + sfx, 'Ours: ' + name + ' + refiner');
+      });
+      note.textContent = 'Showing ' + name + ' at CRF ' + crf + '.' +
+        (bb === 'shiftnet' ? '' : ' CRF 32 and 40 results are shown for ShiftNet-S only.');
+    }
+    document.querySelectorAll('.controls input').forEach(function (i) { i.addEventListener('change', update); });
+
+    // ----- enlarge viewer: flip between methods in the same row -----
+    var dlg = document.getElementById('viewer');
+    var vImg = document.getElementById('viewer-img');
+    var vTitle = document.getElementById('viewer-title');
+    var vSub = document.getElementById('viewer-sub');
+    var cur = [], idx = 0, opener = null;
+
+    function show() {
+      var b = cur[idx], im = b.querySelector('img'), th = b.closest('tr').querySelector('th');
+      vImg.src = im.src; vImg.alt = im.alt;
+      vTitle.textContent = b.dataset.label;
+      vSub.textContent = th.textContent.replace(/\s*\(/, ' (') + ' · ' + (idx + 1) + ' of ' + cur.length;
+    }
+    function step(d) { idx = (idx + d + cur.length) % cur.length; show(); }
+
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.cell');
+      if (!b) return;
+      cur = Array.prototype.filter.call(b.closest('tr').querySelectorAll('.cell'), function (c) { return !c.hidden; });
+      idx = cur.indexOf(b); opener = b;
+      show();
+      if (typeof dlg.showModal === 'function') dlg.showModal(); else window.open(vImg.src);
+    });
+    document.getElementById('v-prev').addEventListener('click', function () { step(-1); });
+    document.getElementById('v-next').addEventListener('click', function () { step(1); });
+    document.getElementById('v-close').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+    });
+    dlg.addEventListener('close', function () { if (opener) opener.focus(); });
+  })();
+  </script>
+</body>
+</html>
